@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWY Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Nunito+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FAF7F2;--rose:#D4A0A0;--rose-deep:#B87878;--gold:#C9A96E;--gold-light:#E8D5B0;--charcoal:#2A2A2A;--text:#3A3A3A;--text-light:#8A8A8A;--white:#FFF;--border:rgba(0,0,0,.06);--green:#2D8A4E;--red:#C94444;--blue:#2563EB}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Nunito Sans',sans-serif;background:var(--cream);color:var(--text);font-weight:300;min-height:100vh}
+
+/* NAV */
+.admin-bar{background:var(--charcoal);padding:.75rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
+.admin-bar-left{display:flex;align-items:center;gap:1rem}
+.admin-logo{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--gold-light);letter-spacing:.15em}
+.admin-badge{background:var(--rose-deep);color:#fff;font-size:.55rem;padding:.18rem .55rem;letter-spacing:.08em;text-transform:uppercase}
+.admin-right{display:flex;align-items:center;gap:.6rem}
+.admin-user{font-size:.72rem;color:var(--gold-light);display:flex;align-items:center;gap:.5rem}
+.admin-user-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.admin-btn-sm{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);font-size:.58rem;padding:.22rem .55rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-family:'Nunito Sans',sans-serif}
+.admin-btn-sm:hover{border-color:var(--rose);color:var(--rose)}
+
+/* LAYOUT */
+.container{max-width:1200px;margin:0 auto;padding:1.5rem 2rem}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;color:var(--charcoal);margin-bottom:.3rem}
+.page-sub{font-size:.82rem;color:var(--text-light);margin-bottom:1.5rem;line-height:1.6}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(6,1fr);gap:.8rem;margin-bottom:1.5rem}
+.stat-card{background:var(--white);padding:1rem .8rem;border:1px solid var(--border);text-align:center}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:600;color:var(--charcoal)}
+.stat-label{font-size:.6rem;color:var(--text-light);letter-spacing:.07em;text-transform:uppercase;margin-top:.15rem}
+
+/* TABS */
+.tabs{display:flex;gap:0;margin-bottom:1.2rem;border-bottom:2px solid var(--border);overflow-x:auto}
+.tab{padding:.65rem 1.3rem;font-size:.75rem;letter-spacing:.05em;color:var(--text-light);cursor:pointer;border-bottom:2px solid transparent;transition:.3s;white-space:nowrap;margin-bottom:-2px}
+.tab.active{color:var(--rose-deep);border-bottom-color:var(--rose-deep);font-weight:600}
+.tab:hover{color:var(--text)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* TABLE */
+.tile-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.tile-table th{background:var(--charcoal);color:#fff;font-size:.65rem;letter-spacing:.07em;text-transform:uppercase;padding:.6rem .65rem;text-align:left;font-weight:500;position:sticky;top:0}
+.tile-table td{padding:.55rem .65rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.tile-table tbody tr:nth-child(even){background:rgba(250,247,242,.5)}
+.tile-table tbody tr:hover{background:rgba(243,227,221,.25)}
+.table-wrap{max-height:65vh;overflow-y:auto;border:1px solid var(--border)}
+
+.block-num{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;color:var(--charcoal)}
+.block-num.featured{color:var(--gold)}
+.badge{display:inline-block;padding:.13rem .45rem;font-size:.55rem;letter-spacing:.05em;text-transform:uppercase;font-weight:600}
+.badge-available{background:#E5F0E0;color:var(--green)}
+.badge-reserved{background:#FFF3CD;color:#856404}
+.badge-assigned{background:#F5E6E0;color:var(--rose-deep)}
+.badge-sold{background:var(--charcoal);color:var(--gold-light)}
+.category-tag{font-size:.6rem;color:var(--text-light);background:rgba(0,0,0,.03);padding:.1rem .3rem}
+
+/* BUTTONS */
+.btn-sm{padding:.28rem .6rem;font-size:.6rem;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--border);background:var(--white);color:var(--text);cursor:pointer;transition:.2s;font-family:'Nunito Sans',sans-serif}
+.btn-sm:hover{border-color:var(--rose);color:var(--rose-deep)}
+.btn-sm.btn-assign{background:var(--charcoal);color:var(--cream);border-color:var(--charcoal)}
+.btn-sm.btn-assign:hover{background:var(--rose-deep);border-color:var(--rose-deep)}
+.btn-sm.btn-reserve{background:var(--gold);color:#fff;border-color:var(--gold)}
+.btn-sm.btn-reserve:hover{background:var(--rose-deep)}
+.btn-sm.btn-release{color:var(--red);border-color:var(--red)}
+.btn-sm.btn-release:hover{background:var(--red);color:#fff}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:.6rem;align-items:center;margin-bottom:.8rem;flex-wrap:wrap}
+.filter-bar select,.filter-bar input{padding:.45rem .65rem;border:1px solid var(--border);background:var(--white);font-family:'Nunito Sans',sans-serif;font-size:.78rem;color:var(--text);outline:0}
+.filter-bar input{width:140px}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--rose)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+.toolbar-left{font-size:.72rem;color:var(--text-light)}
+.toolbar-right{display:flex;gap:.4rem}
+.export-btn{padding:.4rem .8rem;background:var(--gold);color:#fff;border:none;font-family:'Nunito Sans',sans-serif;font-size:.65rem;letter-spacing:.07em;text-transform:uppercase;cursor:pointer}
+.export-btn:hover{background:var(--rose-deep)}
+
+/* ACTIVITY LOG */
+.log-list{max-height:60vh;overflow-y:auto;border:1px solid var(--border);background:var(--white)}
+.log-entry{padding:.55rem .85rem;border-bottom:1px solid var(--border);font-size:.74rem;display:flex;gap:.7rem;align-items:flex-start}
+.log-entry:nth-child(even){background:rgba(250,247,242,.4)}
+.log-time{color:var(--text-light);font-size:.62rem;white-space:nowrap;min-width:115px;font-variant-numeric:tabular-nums}
+.log-user{font-weight:700;font-size:.65rem;min-width:70px}
+.log-user.samyak{color:var(--rose-deep)}
+.log-user.vaibhav{color:var(--blue)}
+.log-user.system{color:var(--text-light)}
+.log-action-type{font-size:.55rem;letter-spacing:.04em;text-transform:uppercase;padding:.1rem .35rem;font-weight:600;min-width:55px;text-align:center;display:inline-block}
+.log-type-login{background:#E5F0E0;color:var(--green)}
+.log-type-logout{background:#F0F0F0;color:var(--text-light)}
+.log-type-reserve{background:#FFF3CD;color:#856404}
+.log-type-assign{background:#F5E6E0;color:var(--rose-deep)}
+.log-type-release{background:#FCE4E4;color:var(--red)}
+.log-type-update{background:#E0E8F5;color:var(--blue)}
+.log-type-sold{background:var(--charcoal);color:var(--gold-light)}
+.log-type-password{background:#F0E8F5;color:#7C3AED}
+.log-detail{color:var(--text);flex:1}
+.log-tile{font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--gold)}
+.log-empty{padding:2rem;text-align:center;color:var(--text-light);font-size:.82rem}
+
+/* MODALS */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100}
+.modal-bg.open{display:flex}
+.modal-box{background:var(--cream);padding:2rem;width:92%;max-width:480px;position:relative;max-height:92vh;overflow-y:auto}
+.modal-close{position:absolute;top:.9rem;right:.9rem;background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--text-light)}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--charcoal);margin-bottom:.3rem}
+.modal-desc{font-size:.75rem;color:var(--text-light);margin-bottom:1rem}
+.f-group{margin-bottom:.75rem}
+.f-label{display:block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:.25rem;font-weight:500}
+.f-input,.f-select,.f-textarea{width:100%;padding:.55rem .75rem;border:1px solid var(--border);background:var(--white);font-family:'Nunito Sans',sans-serif;font-size:.82rem;color:var(--text);outline:0}
+.f-input:focus,.f-textarea:focus,.f-select:focus{border-color:var(--rose)}
+.f-textarea{resize:vertical;min-height:75px}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.f-hint{font-size:.6rem;color:var(--text-light);margin-top:.2rem}
+.modal-actions{display:flex;gap:.5rem;margin-top:1rem}
+.btn-modal{flex:1;padding:.65rem;font-family:'Nunito Sans',sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:.3s}
+.btn-modal-cancel{background:var(--white);border:1px solid var(--border);color:var(--text)}
+.btn-modal-save{background:var(--charcoal);color:var(--cream)}
+.btn-modal-save:hover{background:var(--rose-deep)}
+
+/* CONFIRM */
+.confirm-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:200}
+.confirm-bg.open{display:flex}
+.confirm-box{background:var(--cream);padding:1.6rem;max-width:350px;text-align:center}
+.confirm-msg{font-size:.88rem;color:var(--charcoal);margin-bottom:.35rem;font-weight:500}
+.confirm-sub{font-size:.72rem;color:var(--text-light);margin-bottom:1rem}
+.confirm-actions{display:flex;gap:.5rem}
+.confirm-actions button{flex:1;padding:.6rem;font-family:'Nunito Sans',sans-serif;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;border:none}
+.confirm-cancel{background:var(--white);border:1px solid var(--border)!important;color:var(--text)}
+.confirm-yes{background:var(--red);color:#fff}
+.confirm-yes:hover{background:#a33}
+
+/* AUTH */
+.auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh}
+.auth-box{background:var(--white);padding:2.2rem;width:90%;max-width:360px;text-align:center;border:1px solid var(--border)}
+.auth-logo{font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--charcoal);letter-spacing:.12em;margin-bottom:.2rem}
+.auth-sub{font-size:.72rem;color:var(--text-light);margin-bottom:1.3rem}
+.auth-select{width:100%;padding:.6rem .9rem;border:1px solid var(--border);font-family:'Nunito Sans',sans-serif;font-size:.82rem;margin-bottom:.5rem;outline:0;color:var(--text);background:var(--white)}
+.auth-input{width:100%;padding:.6rem .9rem;border:1px solid var(--border);font-family:'Nunito Sans',sans-serif;font-size:.82rem;margin-bottom:.7rem;outline:0}
+.auth-input:focus,.auth-select:focus{border-color:var(--rose)}
+.auth-btn{width:100%;padding:.7rem;background:var(--charcoal);color:var(--cream);border:none;font-family:'Nunito Sans',sans-serif;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.auth-btn:hover{background:var(--rose-deep)}
+.auth-error{font-size:.7rem;color:var(--red);margin-top:.4rem;display:none}
+.auth-hint{font-size:.6rem;color:var(--text-light);margin-top:.6rem}
+.pw-strength{height:3px;background:var(--border);margin-top:.3rem;margin-bottom:.5rem;overflow:hidden}
+.pw-strength-bar{height:100%;width:0;transition:width .3s,background .3s}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(12px);background:var(--charcoal);color:var(--cream);padding:.6rem 1.2rem;font-size:.75rem;z-index:700;opacity:0;transition:.4s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:768px){.stats-row{grid-template-columns:repeat(3,1fr)}.container{padding:1rem}.f-row{grid-template-columns:1fr}.admin-bar{padding:.6rem 1rem;flex-wrap:wrap;gap:.5rem}.tabs{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}.tab{padding:.55rem .8rem;font-size:.68rem;flex-shrink:0}.tile-table{font-size:.7rem}.tile-table th{font-size:.6rem;padding:.5rem .4rem}.tile-table td{padding:.45rem .4rem;font-size:.7rem}.block-num{font-size:.9rem}.btn-sm{padding:.25rem .45rem;font-size:.55rem}.filter-bar{flex-direction:column;align-items:stretch}.filter-bar select,.filter-bar input{width:100%}.modal-box{padding:1.2rem;width:96%}.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}.page-title{font-size:1.4rem}.page-sub{font-size:.78rem}.stat-num{font-size:1.4rem}.stat-label{font-size:.55rem}.admin-right{flex-wrap:wrap;gap:.4rem}.admin-btn-sm{font-size:.52rem;padding:.2rem .4rem}.admin-user{font-size:.65rem}.toolbar{flex-direction:column;gap:.5rem;align-items:flex-start}.toolbar-right{width:100%;display:flex;gap:.4rem}.export-btn{flex:1;text-align:center}.log-entry{flex-wrap:wrap;gap:.3rem}.log-time{min-width:auto;width:100%}.log-user{min-width:auto}.log-action-type{font-size:.5rem}.auth-box{padding:1.5rem;width:95%}}
+@media(max-width:480px){.stats-row{grid-template-columns:repeat(2,1fr);gap:.5rem}.stat-card{padding:.8rem .5rem}.stat-num{font-size:1.2rem}.tabs{gap:0}.tab{padding:.5rem .6rem;font-size:.62rem}.admin-logo{font-size:1rem}.confirm-box{width:90%;padding:1.2rem}}
+</style>
+</head>
+<body>
+
+<!-- ═══════ AUTH ═══════ -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-box">
+    <div class="auth-logo">AWY</div>
+    <p class="auth-sub">Admin Panel</p>
+    <select class="auth-select" id="authUser">
+      <option value="samyak">Samyak Nagori</option>
+      <option value="vaibhav">Vaibhav Jain</option>
+    </select>
+    <input class="auth-input" id="authPass" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')login()">
+    <div class="pw-strength"><div class="pw-strength-bar" id="pwBar"></div></div>
+    <button class="auth-btn" onclick="login()">Enter</button>
+    <p class="auth-error" id="authError">Incorrect password</p>
+    <p class="auth-hint">First-time default: <b>Samyak@AWY2026</b> / <b>Vaibhav@AWY2026</b></p>
+  </div>
+</div>
+
+<!-- ═══════ ADMIN ═══════ -->
+<div id="adminPanel" style="display:none">
+
+<div class="admin-bar">
+  <div class="admin-bar-left">
+    <span class="admin-logo">AWY</span>
+    <span class="admin-badge">Admin</span>
+  </div>
+  <div class="admin-right">
+    <div class="admin-user"><span class="admin-user-dot"></span><span id="activeUser"></span></div>
+    <button class="admin-btn-sm" onclick="openChangePw()">Change Password</button>
+    <button class="admin-btn-sm" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<div class="container">
+  <h1 class="page-title">AWY Command Center</h1>
+  <p class="page-sub">Manage tiles, track activity, and monitor everything happening on the wall.</p>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="sTotal">0</div><div class="stat-label">Special Tiles</div></div>
+    <div class="stat-card"><div class="stat-num" id="sAvail">0</div><div class="stat-label">Available</div></div>
+    <div class="stat-card"><div class="stat-num" id="sReserved">0</div><div class="stat-label">Reserved</div></div>
+    <div class="stat-card"><div class="stat-num" id="sAssigned">0</div><div class="stat-label">Assigned</div></div>
+    <div class="stat-card"><div class="stat-num" id="sSold">0</div><div class="stat-label">Sold</div></div>
+    <div class="stat-card"><div class="stat-num" id="sLog">0</div><div class="stat-label">Log Entries</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" id="mainTabs">
+    <div class="tab active" data-t="special" onclick="setTab('special')">Special Tiles</div>
+    <div class="tab" data-t="all" onclick="setTab('all')">All Tiles (Wall)</div>
+    <div class="tab" data-t="purchases" onclick="setTab('purchases')">Purchases</div>
+    <div class="tab" data-t="activity" onclick="setTab('activity')">Activity Log</div>
+  </div>
+
+  <!-- ═══════ PANEL: Special Tiles ═══════ -->
+  <div class="tab-panel active" id="panelSpecial">
+    <div class="filter-bar">
+      <select id="fCat" onchange="renderSpecial()">
+        <option value="all">All Categories</option>
+        <option value="founder">Founder Reserved</option>
+        <option value="single-digit">Single Digit</option>
+        <option value="repeating">Repeating</option>
+        <option value="palindrome">Palindrome</option>
+        <option value="sequential">Sequential</option>
+        <option value="milestone">Milestone</option>
+        <option value="lucky">Lucky / Cultural</option>
+        <option value="romantic">Romantic</option>
+      </select>
+      <select id="fStatus" onchange="renderSpecial()">
+        <option value="all">All Statuses</option>
+        <option value="available">Available</option>
+        <option value="reserved">Reserved</option>
+        <option value="assigned">Assigned</option>
+        <option value="sold">Sold</option>
+      </select>
+      <input type="text" id="fSearch" placeholder="Search #..." oninput="renderSpecial()">
+    </div>
+    <div class="toolbar">
+      <span class="toolbar-left" id="spCount"></span>
+      <div class="toolbar-right">
+        <button class="export-btn" onclick="exportTilesCSV()">Export Tiles</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+    <table class="tile-table">
+      <thead><tr><th>Block #</th><th>Category</th><th>Why</th><th>Status</th><th>Assigned To</th><th>Changed By</th><th>Actions</th></tr></thead>
+      <tbody id="spBody"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- ═══════ PANEL: All Tiles ═══════ -->
+  <div class="tab-panel" id="panelAll">
+    <p class="page-sub">View and manage all tiles on the wall — both demo tiles and purchased tiles. Search by block number or name.</p>
+    <div class="filter-bar">
+      <select id="aFilter" onchange="renderAll()">
+        <option value="all">All Tiles</option>
+        <option value="featured">Featured</option>
+        <option value="private">Private</option>
+        <option value="public">Public</option>
+      </select>
+      <input type="text" id="aSearch" placeholder="Search # or name..." oninput="renderAll()">
+    </div>
+    <div class="toolbar">
+      <span class="toolbar-left" id="allCount"></span>
+      <div class="toolbar-right">
+        <button class="export-btn" onclick="exportAllCSV()">Export All Tiles</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+    <table class="tile-table">
+      <thead><tr><th>Block #</th><th>From</th><th>To</th><th>Message</th><th>Date</th><th>Occasion</th><th>Type</th><th>Actions</th></tr></thead>
+      <tbody id="allBody"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- ═══════ PANEL: Purchases ═══════ -->
+  <div class="tab-panel" id="panelPurchases">
+    <p class="page-sub">All purchase attempts from the website. Each entry shows what the customer filled in before being redirected to Razorpay. Verify against your Razorpay dashboard to confirm payment.</p>
+    <div class="filter-bar">
+      <select id="pTier" onchange="renderPurchases()">
+        <option value="all">All Tiers</option>
+        <option value="Basic">Basic (₹199)</option>
+        <option value="Premium">Premium (₹499)</option>
+        <option value="Featured">Featured (₹999)</option>
+        <option value="Choose Your Number">Choose Your Number (₹1,999)</option>
+      </select>
+      <input type="text" id="pSearch" placeholder="Search name/number..." oninput="renderPurchases()">
+    </div>
+    <div class="toolbar">
+      <span class="toolbar-left" id="pCount"></span>
+      <div class="toolbar-right"><button class="export-btn" onclick="exportPurchasesCSV()">Export Purchases</button></div>
+    </div>
+    <div class="table-wrap">
+    <table class="tile-table">
+      <thead><tr><th>Time</th><th>Tier</th><th>₹</th><th>Block #</th><th>From</th><th>To</th><th>Message</th><th>Email</th><th>WhatsApp</th><th>Occasion</th><th>Reminder</th></tr></thead>
+      <tbody id="pBody"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- ═══════ PANEL: Activity Log ═══════ -->
+  <div class="tab-panel" id="panelActivity">
+    <p class="page-sub">Complete audit trail of all actions. Every change is tracked with who, what, and when.</p>
+    <div class="filter-bar">
+      <select id="logUser" onchange="renderLog()">
+        <option value="all">All Users</option>
+        <option value="Samyak Nagori">Samyak</option>
+        <option value="Vaibhav Jain">Vaibhav</option>
+        <option value="System">System</option>
+      </select>
+      <select id="logType" onchange="renderLog()">
+        <option value="all">All Activities</option>
+        <option value="login">Login / Logout</option>
+        <option value="reserve">Reserve</option>
+        <option value="assign">Assign</option>
+        <option value="update">Update</option>
+        <option value="release">Release</option>
+        <option value="sold">Sold</option>
+        <option value="purchase">Purchases (from site)</option>
+        <option value="password">Password Change</option>
+      </select>
+      <input type="text" id="logSearch" placeholder="Search..." oninput="renderLog()">
+    </div>
+    <div class="toolbar">
+      <span class="toolbar-left" id="logCount"></span>
+      <div class="toolbar-right">
+        <button class="export-btn" onclick="exportLogCSV()">Export Log CSV</button>
+      </div>
+    </div>
+    <div class="log-list" id="logList"></div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════ ASSIGN MODAL ═══════ -->
+<div class="modal-bg" id="assignModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAssign()">&times;</button>
+    <p class="modal-title" id="mTitle">Tile</p>
+    <p class="modal-desc" id="mDesc"></p>
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">From (Dedicator)</label><input class="f-input" id="aName"></div>
+      <div class="f-group"><label class="f-label">Dedicated To</label><input class="f-input" id="aTo"></div>
+    </div>
+    <div class="f-group"><label class="f-label">Message</label><textarea class="f-textarea" id="aMsg"></textarea></div>
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Contact</label><input class="f-input" id="aContact"></div>
+      <div class="f-group"><label class="f-label">Amount (₹)</label><input class="f-input" id="aAmt" type="number"></div>
+    </div>
+    <div class="f-group"><label class="f-label">Internal Notes</label><input class="f-input" id="aNotes"></div>
+    <div class="f-group"><label class="f-label">Status</label>
+      <select class="f-select" id="aStat">
+        <option value="reserved">Reserved</option>
+        <option value="assigned">Assigned</option>
+        <option value="sold">Sold</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal btn-modal-cancel" onclick="closeAssign()">Cancel</button>
+      <button class="btn-modal btn-modal-save" onclick="saveAssign()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CHANGE PASSWORD MODAL ═══════ -->
+<div class="modal-bg" id="pwModal">
+  <div class="modal-box" style="max-width:380px">
+    <button class="modal-close" onclick="closePw()">&times;</button>
+    <p class="modal-title">Change Password</p>
+    <p class="modal-desc">Choose a strong password. Minimum 8 characters, include a number and uppercase letter.</p>
+    <div class="f-group"><label class="f-label">Current Password</label><input class="f-input" id="pwOld" type="password"></div>
+    <div class="f-group"><label class="f-label">New Password</label><input class="f-input" id="pwNew" type="password" oninput="checkPwStrength(this.value)"><div class="pw-strength"><div class="pw-strength-bar" id="pwBarNew"></div></div></div>
+    <div class="f-group"><label class="f-label">Confirm New Password</label><input class="f-input" id="pwConfirm" type="password"></div>
+    <p class="f-hint" id="pwError" style="color:var(--red);display:none"></p>
+    <div class="modal-actions">
+      <button class="btn-modal btn-modal-cancel" onclick="closePw()">Cancel</button>
+      <button class="btn-modal btn-modal-save" onclick="savePw()">Update Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CONFIRM ═══════ -->
+<div class="confirm-bg" id="confirmDlg">
+  <div class="confirm-box">
+    <p class="confirm-msg" id="cMsg"></p>
+    <p class="confirm-sub" id="cSub"></p>
+    <div class="confirm-actions">
+      <button class="confirm-cancel" onclick="cancelC()">Cancel</button>
+      <button class="confirm-yes" onclick="execC()">Yes, Release</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// AUTH SYSTEM — Complex passwords
+// ═══════════════════════════════════════════
+const DEFAULT_PASSWORDS = { samyak: 'Samyak@AWY2026', vaibhav: 'Vaibhav@AWY2026' };
+
+function getPasswords(){
+  return JSON.parse(localStorage.getItem('awy_admin_pw') || 'null') || {...DEFAULT_PASSWORDS};
+}
+function setPasswords(pw){ localStorage.setItem('awy_admin_pw', JSON.stringify(pw)); }
+
+const ADMIN_NAMES = { samyak: 'Samyak Nagori', vaibhav: 'Vaibhav Jain' };
+let CU = null; // current user
+let assignId = null, confirmCb = null;
+
+function checkPwStrength(pw){
+  let s=0;
+  if(pw.length>=8) s++;
+  if(pw.length>=12) s++;
+  if(/[A-Z]/.test(pw)) s++;
+  if(/[0-9]/.test(pw)) s++;
+  if(/[^A-Za-z0-9]/.test(pw)) s++;
+  const bar = document.getElementById('pwBarNew') || document.getElementById('pwBar');
+  const colors = ['#C94444','#C94444','#C9A96E','#C9A96E','#2D8A4E','#2D8A4E'];
+  if(bar){ bar.style.width = (s*20)+'%'; bar.style.background = colors[s]||'#ccc'; }
+}
+
+document.getElementById('authPass').addEventListener('input', function(){ checkPwStrengthLogin(this.value); });
+function checkPwStrengthLogin(pw){
+  let s=0; if(pw.length>=8)s++; if(pw.length>=12)s++; if(/[A-Z]/.test(pw))s++; if(/[0-9]/.test(pw))s++; if(/[^A-Za-z0-9]/.test(pw))s++;
+  const bar=document.getElementById('pwBar'); const colors=['#C94444','#C94444','#C9A96E','#C9A96E','#2D8A4E','#2D8A4E'];
+  if(bar){bar.style.width=(s*20)+'%';bar.style.background=colors[s]||'#ccc';}
+}
+
+function login(){
+  const uid = document.getElementById('authUser').value;
+  const pw = document.getElementById('authPass').value;
+  const passwords = getPasswords();
+  if(passwords[uid] && pw === passwords[uid]){
+    CU = { id:uid, name:ADMIN_NAMES[uid] };
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    document.getElementById('activeUser').textContent = CU.name;
+    addLog('login','Logged in');
+    renderSpecial(); updateStats();
+  } else {
+    document.getElementById('authError').style.display = 'block';
+    document.getElementById('authPass').value = '';
+  }
+}
+
+function logout(){
+  addLog('logout','Logged out');
+  CU=null;
+  document.getElementById('adminPanel').style.display='none';
+  document.getElementById('authScreen').style.display='flex';
+  document.getElementById('authPass').value='';
+  document.getElementById('authError').style.display='none';
+}
+
+function openChangePw(){ document.getElementById('pwModal').classList.add('open'); document.getElementById('pwError').style.display='none'; }
+function closePw(){ document.getElementById('pwModal').classList.remove('open'); document.getElementById('pwOld').value=''; document.getElementById('pwNew').value=''; document.getElementById('pwConfirm').value=''; }
+
+function savePw(){
+  const old=document.getElementById('pwOld').value;
+  const nw=document.getElementById('pwNew').value;
+  const cf=document.getElementById('pwConfirm').value;
+  const err=document.getElementById('pwError');
+  const passwords=getPasswords();
+
+  if(old!==passwords[CU.id]){err.textContent='Current password is incorrect';err.style.display='block';return;}
+  if(nw.length<8){err.textContent='New password must be at least 8 characters';err.style.display='block';return;}
+  if(!/[A-Z]/.test(nw)){err.textContent='Must include at least one uppercase letter';err.style.display='block';return;}
+  if(!/[0-9]/.test(nw)){err.textContent='Must include at least one number';err.style.display='block';return;}
+  if(nw!==cf){err.textContent='Passwords do not match';err.style.display='block';return;}
+  if(nw===old){err.textContent='New password must be different from current';err.style.display='block';return;}
+
+  passwords[CU.id]=nw;
+  setPasswords(passwords);
+  addLog('password','Changed their password');
+  closePw();
+  showToast('Password updated successfully');
+}
+
+// ═══════════════════════════════════════════
+// SPECIAL TILES DATABASE
+// ═══════════════════════════════════════════
+function genSpecial(){
+  const t=[];let id=0;const added=new Set();
+  function a(b,c,r){const k=Number(b);if(added.has(k))return;added.add(k);t.push({id:id++,block:String(b).padStart(7,'0'),bn:k,cat:c,reason:r,status:'available',from:'',to:'',msg:'',contact:'',amt:0,notes:'',changedBy:'',changedAt:''})}
+  a(1,'founder','Tile #1 — The very first tile');a(2,'founder','Tile #2 — Co-founder');a(3,'founder','#3 Earliest');a(4,'founder','#4 Earliest');a(5,'founder','#5 Earliest');
+  for(let i=6;i<=9;i++)a(i,'single-digit','Single digit — only 9 exist');
+  [11,22,33,44,55,66,77,88,99].forEach(n=>a(n,'repeating','Double '+String(n)[0]));
+  [111,222,333,444,555,666,777,888,999].forEach(n=>a(n,'repeating','Triple '+String(n)[0]));
+  [1111,2222,3333,4444,5555,6666,7777,8888,9999].forEach(n=>a(n,'repeating','Quad '+String(n)[0]));
+  [11111,22222,33333,44444,55555,66666,77777,88888,99999].forEach(n=>a(n,'repeating','Quint '+String(n)[0]));
+  [111111,222222,333333,444444,555555,666666,777777,888888,999999].forEach(n=>a(n,'repeating','Six '+String(n)[0]+'s'));
+  [123,321,1234,4321,12345,54321,123456,654321,2345,3456,4567,5678,6789,9876,8765,7654].forEach(n=>a(n,'sequential','Sequential '+n));
+  [101,121,131,141,151,161,171,181,191,1001,1221,1331,1441,1551,1661,1771,1881,1991,2002,2112,2332,3003,4004,5005,6006,7007,8008,9009,10001,10101,11011,12321,13331,14441,20002,30003,100001,101101,110011,123321,200002,300003].forEach(n=>a(n,'palindrome','Palindrome'));
+  [10,25,50,100,200,250,500,1000,2000,2500,5000,7500,10000,15000,20000,25000,50000,75000,100000,150000,200000,250000,300000,400000,500000,600000,700000,750000,800000,900000,950000,999999,1000000].forEach(n=>a(n,'milestone','Milestone #'+n.toLocaleString()));
+  a(7,'lucky','Lucky 7');a(13,'lucky','13 iconic');a(21,'lucky','21 coming of age');a(51,'lucky','51 auspicious');a(108,'lucky','108 sacred Hindu');a(786,'lucky','786 Bismillah');a(1008,'lucky','1008 Hindu');a(1729,'lucky','Ramanujan number');a(2024,'lucky','Year 2024');a(2025,'lucky','Year 2025');a(2026,'lucky','AWY launch year');a(2027,'lucky','Year 2027');a(420,'lucky','420');a(69,'lucky','69');
+  a(14,'romantic','Valentine\'s 14');a(143,'romantic','143 I Love You');a(520,'romantic','520 I Love You Chinese');a(1314,'romantic','1314 Forever Chinese');a(214,'romantic','Feb 14');a(831,'romantic','8-3-1 I Love You');a(459,'romantic','459 keypad ILY');a(721,'romantic','721 Cantonese');a(1412,'romantic','14/12');a(143143,'romantic','Double ILY');a(1402,'romantic','Valentine DDMM');a(2512,'romantic','Christmas');a(1508,'romantic','Independence Day');a(2610,'romantic','Republic Day');
+  // Extended 1M range specials
+  a(5201314,'romantic','520+1314 = I Love You Forever');
+  [100100,200200,300300,400400,500500,600600,700700,800800,900900].forEach(n=>a(n,'repeating','Mirror repeat '+n));
+  [112233,223344,334455,445566,556677,667788,778899].forEach(n=>a(n,'sequential','Double sequential'));
+  [121212,131313,141414,151515,161616,171717,181818,191919,202020,212121].forEach(n=>a(n,'repeating','Rhythmic repeat'));
+  a(999001,'milestone','Countdown to 1M — 999 tiles left');a(999500,'milestone','500 tiles from 1M');a(999900,'milestone','100 tiles from 1M');a(999990,'milestone','10 tiles from 1M');
+  a(314159,'lucky','Pi (3.14159)');a(271828,'lucky','Euler\'s number (e)');a(161803,'lucky','Golden ratio');
+  a(420420,'lucky','Double 420');a(786786,'lucky','Double Bismillah');a(108108,'lucky','Double sacred 108');
+  [1947,1950,2000,2001,2010,2015,2020,2023].forEach(n=>a(n,'lucky','Year '+n));
+  a(370000,'milestone','Middle-ish of the wall');a(500001,'milestone','First tile in second half');
+  [123456,234567,345678,456789,567890].forEach(n=>a(n,'sequential','Running sequence'));
+  a(246810,'sequential','Even sequence 2-4-6-8-10');a(135791,'sequential','Odd sequence 1-3-5-7-9-1');
+  return t;
+}
+
+// Wall tiles (demo data matching the main site)
+function genWallTiles(){
+  const NAMES=['Aarav','Aditi','Arjun','Ananya','Kabir','Meera','Rohan','Priya','Vivaan','Isha','Sai','Diya','Aditya','Nisha','Dev','Kavya','Arnav','Simran','Karan','Pooja','Harsh','Neha','Raj','Tara','Yash','Mira'];
+  const MSGS=['Through every season, it\'s always been you.','You gave me roots and wings.','The best decision was choosing us.','You taught me strength quietly.','Some love stories never end.','Your lullabies echo in my heart.','You are my calm in every storm.','In your eyes I found home.','You make the ordinary feel sacred.','Every sunrise reminds me of your smile.','Distance means nothing when someone means everything.','Our love is written in the stars.','Forever isn\'t long enough.','Your kindness changed my life.','No words are enough, but here are a few.'];
+  const OCC=['Anniversary','Birthday','Wedding','Valentine\'s Day','Mother\'s Day','Friendship','In Memory','Just Because'];
+  const tiles=[];
+  function rand(a){return a[Math.floor(Math.random()*a.length)];}
+  for(let i=0;i<200;i++){
+    const n1=rand(NAMES);let n2=rand(NAMES);while(n2===n1)n2=rand(NAMES);
+    const priv=Math.random()<.15, feat=!priv&&Math.random()<.1;
+    tiles.push({block:1000+i, from:n1, to:n2, msg:rand(MSGS), occasion:rand(OCC), featured:feat, private:priv, date:'2026'});
+  }
+  return tiles;
+}
+
+let SP = JSON.parse(localStorage.getItem('awy_sp_v5')||'null') || genSpecial();
+let LOG = JSON.parse(localStorage.getItem('awy_log_v4')||'[]');
+let WALL = genWallTiles();
+
+// Merge purchase logs from the main site into the activity view
+function getMergedLog(){
+  const purchases = JSON.parse(localStorage.getItem('awy_purchases')||'[]');
+  const purchaseEntries = purchases.map(p => ({
+    time: p.time,
+    user: 'Customer',
+    uid: 'customer',
+    type: 'purchase',
+    detail: p.tier + ' tile — ₹' + p.amount + (p.block !== 'auto' ? ' (Custom #' + p.block + ')' : ''),
+    tile: p.block !== 'auto' ? String(p.block).padStart(7,'0') : null
+  }));
+  const merged = [...LOG, ...purchaseEntries];
+  merged.sort((a,b) => new Date(b.time) - new Date(a.time));
+  return merged;
+}
+
+function saveSP(){localStorage.setItem('awy_sp_v5',JSON.stringify(SP))}
+function saveLOG(){localStorage.setItem('awy_log_v4',JSON.stringify(LOG))}
+
+function addLog(type, detail, tile){
+  LOG.unshift({time:new Date().toISOString(), user:CU?CU.name:'System', uid:CU?CU.id:'system', type, detail, tile:tile||null});
+  if(LOG.length>1000) LOG=LOG.slice(0,1000);
+  saveLOG();
+}
+
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// ═══════════════════════════════════════════
+// TAB SWITCHING
+// ═══════════════════════════════════════════
+function setTab(t){
+  document.querySelectorAll('#mainTabs .tab').forEach(el=>el.classList.toggle('active',el.dataset.t===t));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  const map={special:'panelSpecial',all:'panelAll',purchases:'panelPurchases',activity:'panelActivity'};
+  document.getElementById(map[t]).classList.add('active');
+  if(t==='special') renderSpecial();
+  else if(t==='all') renderAll();
+  else if(t==='purchases') renderPurchases();
+  else if(t==='activity') renderLog();
+  updateStats();
+}
+
+function updateStats(){
+  document.getElementById('sTotal').textContent=SP.length;
+  document.getElementById('sAvail').textContent=SP.filter(t=>t.status==='available').length;
+  document.getElementById('sReserved').textContent=SP.filter(t=>t.status==='reserved').length;
+  document.getElementById('sAssigned').textContent=SP.filter(t=>t.status==='assigned').length;
+  document.getElementById('sSold').textContent=SP.filter(t=>t.status==='sold').length;
+  document.getElementById('sLog').textContent=LOG.length;
+}
+
+// ═══════════════════════════════════════════
+// SPECIAL TILES PANEL
+// ═══════════════════════════════════════════
+function renderSpecial(){
+  const cat=document.getElementById('fCat').value;
+  const st=document.getElementById('fStatus').value;
+  const q=document.getElementById('fSearch').value.trim().toLowerCase();
+  let f=SP;
+  if(cat!=='all') f=f.filter(t=>t.cat===cat);
+  if(st!=='all') f=f.filter(t=>t.status===st);
+  if(q) f=f.filter(t=>t.block.includes(q)||String(t.bn).includes(q)||(t.from||'').toLowerCase().includes(q));
+  document.getElementById('spCount').textContent=`Showing ${f.length} of ${SP.length}`;
+  document.getElementById('spBody').innerHTML=f.map(t=>{
+    const bc=(t.cat==='founder'||t.cat==='milestone')?' featured':'';
+    const sm={available:'badge-available',reserved:'badge-reserved',assigned:'badge-assigned',sold:'badge-sold'};
+    const ad=t.from?`<b>${t.from}</b>`+(t.to?' → '+t.to:''):'—';
+    const cb=t.changedBy?`<span style="font-size:.62rem;color:var(--text-light)">${t.changedBy}<br>${t.changedAt?new Date(t.changedAt).toLocaleDateString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):''}</span>`:'—';
+    let act='';
+    if(t.status==='available') act=`<button class="btn-sm btn-reserve" onclick="doReserve(${t.id})">Reserve</button> <button class="btn-sm btn-assign" onclick="openAssign(${t.id},'sp')">Assign</button>`;
+    else if(t.status==='reserved') act=`<button class="btn-sm btn-assign" onclick="openAssign(${t.id},'sp')">Assign</button> <button class="btn-sm btn-release" onclick="doConfirm(${t.id})">Release</button>`;
+    else act=`<button class="btn-sm" onclick="openAssign(${t.id},'sp')">Edit</button> <button class="btn-sm btn-release" onclick="doConfirm(${t.id})">Release</button>`;
+    return `<tr><td><span class="block-num${bc}">#${t.block}</span></td><td><span class="category-tag">${t.cat}</span></td><td style="font-size:.7rem;color:var(--text-light)">${t.reason}</td><td><span class="badge ${sm[t.status]||''}">${t.status}</span></td><td style="font-size:.73rem">${ad}</td><td>${cb}</td><td style="white-space:nowrap">${act}</td></tr>`;
+  }).join('');
+}
+
+function doReserve(id){
+  const t=SP.find(x=>x.id===id);if(!t)return;
+  t.status='reserved';t.changedBy=CU.name;t.changedAt=new Date().toISOString();
+  saveSP();addLog('reserve','Reserved tile',t.block);renderSpecial();updateStats();showToast('Tile #'+t.block+' reserved');
+}
+
+function doConfirm(id){
+  const t=SP.find(x=>x.id===id);if(!t)return;
+  document.getElementById('cMsg').textContent='Release tile #'+t.block+'?';
+  document.getElementById('cSub').textContent=t.from?'Removes "'+t.from+'" assignment and all data.':'Returns tile to available.';
+  document.getElementById('confirmDlg').classList.add('open');
+  confirmCb=function(){
+    const os=t.status,of=t.from;
+    t.status='available';t.from='';t.to='';t.msg='';t.contact='';t.amt=0;t.notes='';t.changedBy=CU.name;t.changedAt=new Date().toISOString();
+    saveSP();addLog('release','Released tile (was '+os+(of?' for '+of:'')+')',t.block);renderSpecial();updateStats();showToast('Tile released');
+  };
+}
+function cancelC(){document.getElementById('confirmDlg').classList.remove('open');confirmCb=null;}
+function execC(){if(confirmCb)confirmCb();cancelC();}
+
+// ═══════════════════════════════════════════
+// ALL TILES PANEL
+// ═══════════════════════════════════════════
+function renderAll(){
+  const ft=document.getElementById('aFilter').value;
+  const q=document.getElementById('aSearch').value.trim().toLowerCase();
+  let f=WALL;
+  if(ft==='featured') f=f.filter(t=>t.featured);
+  else if(ft==='private') f=f.filter(t=>t.private);
+  else if(ft==='public') f=f.filter(t=>!t.private);
+  if(q) f=f.filter(t=>String(t.block).includes(q)||t.from.toLowerCase().includes(q)||t.to.toLowerCase().includes(q));
+  document.getElementById('allCount').textContent=`Showing ${f.length} of ${WALL.length} wall tiles`;
+  document.getElementById('allBody').innerHTML=f.map(t=>{
+    const type=t.private?'<span class="badge badge-reserved">Private</span>':t.featured?'<span class="badge badge-sold">Featured</span>':'<span class="badge badge-available">Public</span>';
+    return `<tr><td><span class="block-num">#${t.block}</span></td><td>${t.from}</td><td>${t.to}</td><td style="font-size:.72rem;color:var(--text-light);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.private?'[Private]':t.msg}</td><td style="font-size:.72rem">${t.date}</td><td style="font-size:.72rem">${t.occasion}</td><td>${type}</td><td><button class="btn-sm" onclick="viewWall(${t.block})">View</button></td></tr>`;
+  }).join('');
+}
+
+function viewWall(block){
+  const t=WALL.find(x=>x.block===block);if(!t)return;
+  alert('Tile #'+block+'\n\nFrom: '+t.from+'\nTo: '+t.to+'\nMessage: '+(t.private?'[Private]':t.msg)+'\nOccasion: '+t.occasion+'\nType: '+(t.featured?'Featured':t.private?'Private':'Public'));
+}
+
+// ═══════════════════════════════════════════
+// ACTIVITY LOG
+// ═══════════════════════════════════════════
+function renderLog(){
+  const usr=document.getElementById('logUser').value;
+  const typ=document.getElementById('logType').value;
+  const q=document.getElementById('logSearch').value.trim().toLowerCase();
+  let f=LOG;
+  if(usr!=='all') f=f.filter(e=>e.user===usr);
+  if(typ!=='all'){
+    if(typ==='login') f=f.filter(e=>e.type==='login'||e.type==='logout');
+    else f=f.filter(e=>e.type===typ);
+  }
+  if(q) f=f.filter(e=>e.detail.toLowerCase().includes(q)||(e.tile||'').toLowerCase().includes(q));
+  document.getElementById('logCount').textContent=`Showing ${f.length} of ${LOG.length} entries`;
+  if(!f.length){document.getElementById('logList').innerHTML='<div class="log-empty">No matching activity</div>';return;}
+  document.getElementById('logList').innerHTML=f.map(e=>{
+    const d=new Date(e.time);
+    const ts=d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    const uc=e.uid==='samyak'?'samyak':e.uid==='vaibhav'?'vaibhav':'system';
+    const tc='log-type-'+(e.type||'update');
+    const tile=e.tile?` <span class="log-tile">#${e.tile}</span>`:'';
+    return `<div class="log-entry"><span class="log-time">${ts}</span><span class="log-user ${uc}">${e.user}</span><span class="log-action-type ${tc}">${e.type}</span><span class="log-detail">${e.detail}${tile}</span></div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// ASSIGN MODAL (shared for special tiles)
+// ═══════════════════════════════════════════
+function openAssign(id){
+  assignId=id;
+  const t=SP.find(x=>x.id===id);if(!t)return;
+  document.getElementById('mTitle').textContent='Tile #'+t.block;
+  document.getElementById('mDesc').textContent=t.reason;
+  document.getElementById('aName').value=t.from||'';
+  document.getElementById('aTo').value=t.to||'';
+  document.getElementById('aMsg').value=t.msg||'';
+  document.getElementById('aContact').value=t.contact||'';
+  document.getElementById('aAmt').value=t.amt||'';
+  document.getElementById('aNotes').value=t.notes||'';
+  document.getElementById('aStat').value=t.status==='sold'?'sold':t.status==='reserved'?'reserved':'assigned';
+  document.getElementById('assignModal').classList.add('open');
+}
+function closeAssign(){document.getElementById('assignModal').classList.remove('open');assignId=null;}
+
+function saveAssign(){
+  if(assignId===null)return;
+  const t=SP.find(x=>x.id===assignId);if(!t)return;
+  const os=t.status;
+  t.status=document.getElementById('aStat').value;
+  t.from=document.getElementById('aName').value.trim();
+  t.to=document.getElementById('aTo').value.trim();
+  t.msg=document.getElementById('aMsg').value.trim();
+  t.contact=document.getElementById('aContact').value.trim();
+  t.amt=parseInt(document.getElementById('aAmt').value)||0;
+  t.notes=document.getElementById('aNotes').value.trim();
+  t.changedBy=CU.name;t.changedAt=new Date().toISOString();
+  saveSP();
+  const action=(os==='available'||os==='reserved')?'assign':'update';
+  const logType=t.status==='sold'?'sold':action;
+  addLog(logType,(action==='assign'?'Assigned':'Updated')+' tile → "'+t.from+'" to "'+t.to+'" ('+t.status+', ₹'+t.amt+')',t.block);
+  renderSpecial();updateStats();closeAssign();showToast('Tile #'+t.block+' saved');
+}
+
+// ═══════════════════════════════════════════
+// PURCHASES PANEL
+// ═══════════════════════════════════════════
+function renderPurchases(){
+  const purchases = JSON.parse(localStorage.getItem('awy_purchases')||'[]');
+  const tier = document.getElementById('pTier').value;
+  const q = document.getElementById('pSearch').value.trim().toLowerCase();
+  let f = purchases;
+  if(tier!=='all') f=f.filter(p=>p.tier===tier);
+  if(q) f=f.filter(p=>(p.from||'').toLowerCase().includes(q)||(p.to||'').toLowerCase().includes(q)||String(p.block).includes(q)||(p.yourEmail||'').toLowerCase().includes(q));
+  document.getElementById('pCount').textContent='Showing '+f.length+' of '+purchases.length+' purchases';
+  document.getElementById('pBody').innerHTML=f.length?f.map(p=>{
+    const d=new Date(p.time);
+    const ts=d.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    const blockDisplay=p.block==='auto-assign'?'<span style="color:var(--text-light)">Auto</span>':'<span class="block-num">#'+p.block+'</span>';
+    const tierBadge=p.tier==='Choose Your Number'?'<span class="badge badge-sold">Choose #</span>':p.tier==='Featured'?'<span class="badge badge-assigned">Featured</span>':p.tier==='Premium'?'<span class="badge badge-reserved">Premium</span>':'<span class="badge badge-available">Basic</span>';
+    const waDisplay=[p.yourWA,p.theirWA].filter(Boolean).join(' / ')||'—';
+    return '<tr><td style="font-size:.68rem;color:var(--text-light);white-space:nowrap">'+ts+'</td><td>'+tierBadge+'</td><td style="font-weight:600">₹'+p.amount+'</td><td>'+blockDisplay+'</td><td style="font-size:.75rem"><b>'+(p.from||'—')+'</b></td><td style="font-size:.75rem">'+(p.to||'—')+'</td><td style="font-size:.68rem;color:var(--text-light);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(p.message||'—')+'</td><td style="font-size:.68rem">'+(p.yourEmail||'—')+'</td><td style="font-size:.68rem">'+(waDisplay)+'</td><td style="font-size:.68rem">'+(p.occasion||'—')+'</td><td style="font-size:.68rem">'+(p.reminder||'—')+'</td></tr>';
+  }).join(''):'<tr><td colspan="11" style="text-align:center;padding:2rem;color:var(--text-light)">No purchases yet. Purchases will appear here when customers click "Place My Tile Forever" on the website.</td></tr>';
+}
+
+function exportPurchasesCSV(){
+  const purchases=JSON.parse(localStorage.getItem('awy_purchases')||'[]');
+  const r=[['Time','ID','Tier','Amount','Block #','From','To','Message','Date','Occasion','Your Email','Their Email','Your WhatsApp','Their WhatsApp','Instagram','Privacy','Reminder']];
+  purchases.forEach(p=>r.push([p.time,p.id,p.tier,p.amount,p.block,p.from,p.to,p.message,p.date,p.occasion,p.yourEmail,p.theirEmail,p.yourWA,p.theirWA,p.instagram,p.privacy,p.reminder]));
+  dl(r,'awy-purchases');
+}
+
+// ═══════════════════════════════════════════
+// EXPORT FUNCTIONS
+// ═══════════════════════════════════════════
+function dl(rows,name){
+  const BOM = '\uFEFF';
+  const csv=rows.map(r=>r.map(c=>'"'+String(c==null?'':c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const blob=new Blob([BOM+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=name+'-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Exported '+name+'.csv');
+}
+
+function exportTilesCSV(){
+  const r=[['Block #','Category','Reason','Status','From','To','Message','Contact','Amount','Notes','Changed By','Changed At']];
+  SP.forEach(t=>r.push([t.block,t.cat,t.reason,t.status,t.from,t.to,t.msg,t.contact,t.amt,t.notes,t.changedBy,t.changedAt]));
+  dl(r,'awy-special-tiles');
+}
+
+function exportAllCSV(){
+  const r=[['Block #','From','To','Message','Occasion','Featured','Private']];
+  WALL.forEach(t=>r.push([t.block,t.from,t.to,t.msg,t.occasion,t.featured?'Yes':'No',t.private?'Yes':'No']));
+  dl(r,'awy-all-tiles');
+}
+
+function exportLogCSV(){
+  const r=[['Timestamp','User','Action Type','Detail','Tile #']];
+  LOG.forEach(e=>r.push([e.time,e.user,e.type,e.detail,e.tile||'']));
+  dl(r,'awy-activity-log');
+}
+</script>
+</body>
+</html>

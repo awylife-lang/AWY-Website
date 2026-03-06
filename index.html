@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>AWY – Always With You</title>
+<meta name="description" content="A permanent digital love wall where your dedication lives forever. Place a tile, write your message, and it stays — infinite and eternal.">
+<meta name="keywords" content="AWY, Always With You, love wall, digital dedication, permanent love, love tile, gift, relationship">
+<meta property="og:title" content="AWY – Always With You">
+<meta property="og:description" content="A permanent space where your love lives forever. Dedicate a tile on the infinite love wall.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://awy.love">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AWY – Always With You">
+<meta name="twitter:description" content="A permanent space where your love lives forever.">
+<meta name="theme-color" content="#D4A0A0">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💖</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Nunito+Sans:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   VARIABLES & RESET
+   ══════════════════════════════════════════════════════════ */
+:root {
+  --cream: #FAF7F2;
+  --cream-deep: #F0EBE3;
+  --blush: #F3E3DD;
+  --rose: #D4A0A0;
+  --rose-deep: #B87878;
+  --rose-glow: rgba(212,160,160,0.35);
+  --gold: #C9A96E;
+  --gold-light: #E8D5B0;
+  --gold-glow: rgba(201,169,110,0.3);
+  --charcoal: #2A2A2A;
+  --text: #3A3A3A;
+  --text-light: #8A8A8A;
+  --text-muted: #B5B5B5;
+  --white: #FFFFFF;
+  --border: rgba(0,0,0,0.05);
+  --shadow-soft: 0 4px 30px rgba(0,0,0,0.04);
+  --shadow-lift: 0 16px 50px rgba(0,0,0,0.08);
+  --tile-w: 220px;
+  --tile-h: 240px;
+  --gap: 14px;
+  --radius: 2px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  color: var(--text);
+  background: var(--cream);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 300;
+}
+
+::selection { background: var(--blush); color: var(--charcoal); }
+
+/* ══════════════════════════════════════════════════════════
+   NAVIGATION
+   ══════════════════════════════════════════════════════════ */
+.site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.1rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.5s;
+}
+
+.site-nav.scrolled {
+  background: rgba(250,247,242,0.92);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 1px 30px rgba(0,0,0,0.03);
+}
+
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--charcoal);
+  text-decoration: none;
+}
+
+.nav-links { display: flex; gap: 2.2rem; align-items: center; }
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-light);
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.07em;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--rose-deep); }
+
+.nav-cta {
+  padding: 0.6rem 1.6rem !important;
+  background: var(--charcoal) !important;
+  color: var(--cream) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase;
+  transition: all 0.3s !important;
+}
+.nav-cta:hover { background: var(--rose-deep) !important; }
+
+.nav-hamburger {
+  display: none;
+  background: none; border: none;
+  width: 28px; height: 20px;
+  position: relative; cursor: pointer;
+}
+.nav-hamburger span {
+  display: block; width: 100%; height: 1.5px;
+  background: var(--charcoal);
+  position: absolute; left: 0;
+  transition: all 0.3s;
+}
+.nav-hamburger span:nth-child(1) { top: 0; }
+.nav-hamburger span:nth-child(2) { top: 9px; }
+.nav-hamburger span:nth-child(3) { top: 18px; }
+
+/* ══════════════════════════════════════════════════════════
+   COMMON
+   ══════════════════════════════════════════════════════════ */
+.section { padding: 7rem 2rem; }
+.section-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--rose-deep);
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 3rem);
+  text-align: center;
+  color: var(--charcoal);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.section-sub {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  max-width: 520px;
+  margin: 0 auto 3.5rem;
+  line-height: 1.8;
+}
+
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s, transform 0.9s; }
+.reveal.vis { opacity: 1; transform: translateY(0); }
+
+.btn {
+  display: inline-block;
+  padding: 1rem 3rem;
+  background: var(--charcoal);
+  color: var(--cream);
+  text-decoration: none;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: none; cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.btn:hover { background: var(--rose-deep); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(184,120,120,0.2); }
+.btn-outline {
+  background: transparent; border: 1px solid var(--charcoal); color: var(--charcoal);
+}
+.btn-outline:hover { background: var(--charcoal); color: var(--cream); box-shadow: none; }
+.btn-gold { background: var(--gold); }
+.btn-gold:hover { background: var(--rose-deep); }
+
+/* ══════════════════════════════════════════════════════════
+   HERO
+   ══════════════════════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -25%; right: -15%;
+  width: 650px; height: 650px;
+  background: radial-gradient(circle, rgba(212,160,160,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: -15%; left: -10%;
+  width: 450px; height: 450px;
+  background: radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-eyebrow {
+  font-size: 0.72rem; letter-spacing: 0.35em;
+  text-transform: uppercase; color: var(--rose-deep);
+  margin-bottom: 1.5rem;
+  opacity: 0; animation: fadeUp 0.9s 0.2s forwards;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 1.08; color: var(--charcoal);
+  margin-bottom: 1.5rem;
+  opacity: 0; animation: fadeUp 0.9s 0.4s forwards;
+}
+.hero h1 em { font-style: italic; color: var(--rose-deep); }
+.hero-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+  font-weight: 300; font-style: italic;
+  color: var(--text-light);
+  max-width: 460px; line-height: 1.65;
+  margin-bottom: 2.5rem;
+  opacity: 0; animation: fadeUp 0.9s 0.6s forwards;
+}
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+  opacity: 0; animation: fadeUp 0.9s 0.8s forwards; }
+
+.hero-scroll {
+  position: absolute; bottom: 2.5rem;
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  opacity: 0; animation: fadeUp 0.9s 1.2s forwards;
+}
+.hero-scroll span { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+.scroll-line { width: 1px; height: 36px; background: var(--rose); animation: scrollPulse 2.2s infinite; }
+
+@keyframes fadeUp { from { opacity:0; transform: translateY(22px); } to { opacity:1; transform: translateY(0); } }
+@keyframes scrollPulse { 0%,100% { opacity:0.3; transform: scaleY(0.5); transform-origin: top; } 50% { opacity:1; transform: scaleY(1); } }
+
+/* ══════════════════════════════════════════════════════════
+   ABOUT
+   ══════════════════════════════════════════════════════════ */
+.about { background: var(--white); }
+.about-content { max-width: 620px; margin: 0 auto; text-align: center; }
+.about-content p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem; line-height: 1.9;
+  color: var(--text); font-weight: 400;
+}
+.about-divider { width: 50px; height: 1px; background: var(--gold); margin: 2.5rem auto 0; }
+
+/* ══════════════════════════════════════════════════════════
+   PRODUCT TIERS
+   ══════════════════════════════════════════════════════════ */
+.tiers-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+.tier {
+  background: var(--white); padding: 2.5rem 2rem;
+  text-align: center; border: 1px solid var(--border);
+  transition: all 0.5s cubic-bezier(0.4,0,0.2,1); cursor: pointer; position: relative;
+}
+.tier:hover { transform: translateY(-5px); box-shadow: var(--shadow-lift); border-color: var(--rose); }
+.tier.is-featured { border-color: var(--gold-light); background: linear-gradient(180deg, var(--white), rgba(232,213,176,0.07)); }
+.tier-badge {
+  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: var(--white);
+  font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.3rem 1.1rem; font-weight: 500;
+}
+.tier-icon { margin: 0 auto 1.2rem; color: var(--rose-deep); }
+.tier-icon svg { width: 42px; height: 42px; stroke: var(--rose-deep); stroke-width: 1; fill: none; }
+.tier-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.6rem;
+}
+.tier-price { font-size: 0.82rem; color: var(--rose-deep); font-weight: 500; margin-bottom: 1.2rem; letter-spacing: 0.04em; }
+.tier-list { list-style: none; margin-bottom: 1.8rem; }
+.tier-list li {
+  font-size: 0.82rem; color: var(--text-light); padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+.tier-list li:last-child { border: none; }
+.tier-btn { display: inline-block; padding: 0.7rem 1.8rem; border: 1px solid var(--charcoal); color: var(--charcoal);
+  background: transparent; font-family: 'Nunito Sans',sans-serif; font-size: 0.72rem;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; text-decoration: none; }
+.tier-btn:hover { background: var(--charcoal); color: var(--cream); }
+.is-featured .tier-btn { border-color: var(--gold); color: var(--gold); }
+.is-featured .tier-btn:hover { background: var(--gold); color: var(--white); }
+
+/* ══════════════════════════════════════════════════════════
+   HOW IT WORKS
+   ══════════════════════════════════════════════════════════ */
+.how { background: var(--white); }
+.steps-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 3rem; max-width: 860px; margin: 0 auto; position: relative; }
+.steps-row::before {
+  content: ''; position: absolute; top: 28px; left: 15%; right: 15%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--rose), transparent);
+}
+.step { text-align: center; position: relative; }
+.step-num {
+  width: 54px; height: 54px; border-radius: 50%;
+  background: var(--cream); border: 1px solid var(--rose);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.3rem;
+  font-family: 'Cormorant Garamond', serif; font-size: 1.15rem;
+  color: var(--rose-deep); position: relative; z-index: 1;
+}
+.step h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.6rem; }
+.step p { font-size: 0.82rem; color: var(--text-light); line-height: 1.65; }
+
+/* ══════════════════════════════════════════════════════════
+   WALL PREVIEW (Landing Page)
+   ══════════════════════════════════════════════════════════ */
+.wall-teaser { background: var(--cream); position: relative; overflow: hidden; }
+.wall-teaser-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem;
+  max-width: 900px; margin: 0 auto 2.5rem;
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+.wt-tile {
+  background: var(--white); padding: 1.2rem; border: 1px solid var(--border);
+  transition: transform 0.3s; cursor: default;
+}
+.wt-tile:hover { transform: translateY(-2px); }
+.wt-tile.wt-feat { border-color: var(--gold-light); background: linear-gradient(135deg, var(--white), rgba(232,213,176,0.08)); }
+.wt-heart { font-size: 0.65rem; color: var(--rose); margin-bottom: 0.4rem; }
+.wt-names { font-family: 'Cormorant Garamond', serif; font-size: 0.88rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.3rem; }
+.wt-msg { font-size: 0.7rem; color: var(--text-light); font-style: italic; line-height: 1.45; }
+.wall-teaser-center { text-align: center; }
+
+/* ══════════════════════════════════════════════════════════
+   FAQ
+   ══════════════════════════════════════════════════════════ */
+.faq { background: var(--white); }
+.faq-list { max-width: 620px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid rgba(0,0,0,0.05); padding: 1.4rem 0; cursor: pointer; }
+.faq-q {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
+  color: var(--charcoal); font-weight: 500;
+}
+.faq-toggle { font-size: 1.15rem; color: var(--rose); transition: transform 0.3s; font-weight: 300; }
+.faq-item.open .faq-toggle { transform: rotate(45deg); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s, padding 0.4s; }
+.faq-item.open .faq-a { max-height: 200px; padding-top: 0.8rem; }
+.faq-a p { font-size: 0.85rem; color: var(--text-light); line-height: 1.7; }
+
+/* ══════════════════════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════════════════════ */
+footer {
+  background: var(--charcoal); color: rgba(255,255,255,0.45);
+  text-align: center; padding: 3.5rem 2rem;
+}
+.footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; letter-spacing: 0.15em; color: rgba(255,255,255,0.75); margin-bottom: 0.6rem; }
+footer p { font-size: 0.75rem; letter-spacing: 0.04em; }
+
+/* ══════════════════════════════════════════════════════════
+   THE WALL – FULL SCREEN OVERLAY
+   ══════════════════════════════════════════════════════════ */
+.wall-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--cream-deep);
+  display: none; overflow: hidden;
+  cursor: grab;
+}
+.wall-overlay:active { cursor: grabbing; }
+.wall-overlay.open { display: block; animation: wallFadeIn 0.6s; }
+@keyframes wallFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Wall top bar */
+.wall-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 510;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.9rem 1.5rem;
+  background: linear-gradient(180deg, rgba(240,235,227,0.96) 0%, rgba(240,235,227,0.8) 80%, transparent 100%);
+  pointer-events: none;
+}
+.wall-bar > * { pointer-events: auto; }
+.wall-close {
+  background: none; border: 1px solid var(--border); width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1rem; color: var(--text-light);
+  transition: all 0.3s;
+}
+.wall-close:hover { border-color: var(--rose); color: var(--rose-deep); }
+.wall-search-area { display: flex; gap: 0.5rem; align-items: center; }
+.wall-search {
+  width: 170px; padding: 0.5rem 0.9rem;
+  border: 1px solid var(--border); background: var(--white);
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.78rem;
+  color: var(--text); outline: none; transition: all 0.3s;
+}
+.wall-search:focus { border-color: var(--rose); width: 210px; }
+.wall-search::placeholder { color: var(--text-muted); }
+.wall-search-btn {
+  padding: 0.5rem 0.9rem; background: var(--charcoal); color: var(--cream);
+  border: none; font-family: 'Nunito Sans',sans-serif; font-size: 0.7rem;
+  letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.3s;
+}
+.wall-search-btn:hover { background: var(--rose-deep); }
+.wall-dedicate-btn {
+  padding: 0.5rem 1.1rem; background: var(--gold); color: var(--white);
+  border: none; font-family: 'Nunito Sans',sans-serif; font-size: 0.68rem;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.3s;
+  margin-left: 0.5rem;
+}
+.wall-dedicate-btn:hover { background: var(--rose-deep); }
+
+.wall-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem; font-style: italic; color: var(--text-light);
+  position: absolute; left: 50%; transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Coordinates */
+.wall-coords {
+  position: fixed; bottom: 1rem; left: 1.5rem; z-index: 510;
+  font-size: 0.65rem; letter-spacing: 0.08em; color: var(--text-muted);
+  font-variant-numeric: tabular-nums; opacity: 0.6;
+}
+
+/* Minimap */
+.minimap {
+  position: fixed; bottom: 1rem; right: 1.5rem; z-index: 510;
+  width: 130px; height: 95px;
+  background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
+  border: 1px solid var(--border); overflow: hidden;
+  opacity: 0.55; transition: opacity 0.3s; cursor: pointer;
+}
+.minimap:hover { opacity: 1; }
+.mm-dot { position: absolute; background: var(--rose); border-radius: 50%; width: 2.5px; height: 2.5px; opacity: 0.4; }
+.mm-dot.mm-feat { background: var(--gold); width: 3.5px; height: 3.5px; opacity: 0.7; }
+.mm-vp { position: absolute; border: 1.5px solid var(--rose-deep); background: rgba(212,160,160,0.06); transition: all 0.12s; }
+
+/* Wall viewport & canvas */
+.wall-vp { width: 100%; height: 100%; position: relative; z-index: 2; }
+.wall-cv { position: absolute; top: 0; left: 0; will-change: transform; }
+
+/* ══════════════════════════════════════════════════════════
+   TILES ON THE WALL
+   ══════════════════════════════════════════════════════════ */
+.wtile {
+  position: absolute;
+  width: var(--tile-w); height: var(--tile-h);
+  perspective: 800px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.wtile-inner {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.4,0,0.2,1);
+}
+.wtile.flipped .wtile-inner { transform: rotateY(180deg) scale(1.08); }
+.wtile.flipped {
+  z-index: 100 !important;
+  filter: drop-shadow(0 16px 50px rgba(0,0,0,0.25));
+}
+.wtile { transition: filter 0.4s; }
+
+.wtile-front, .wtile-back {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: 1.1rem;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.wtile-back { transform: rotateY(180deg); padding: 0; background: var(--white); border: 1.5px solid var(--rose); }
+.wtile-back .wtile-back-scroll { padding: 0; }
+
+.wtile:not(.flipped):hover .wtile-front {
+  border-color: var(--rose);
+  box-shadow: 0 8px 35px rgba(0,0,0,0.06);
+}
+
+/* Front */
+.wtile-front-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: auto; }
+.wtile-block { font-size: 0.6rem; letter-spacing: 0.08em; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.wtile-lock { font-size: 0.75rem; color: var(--text-muted); opacity: 0.5; }
+.wtile-front-body { text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.wtile-accent { width: 20px; height: 1px; background: var(--rose); margin: 0 auto 0.7rem; }
+.wtile-to-label { font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.3rem; }
+.wtile-to-name { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 500; color: var(--charcoal); }
+.wtile-front-hint { font-size: 0.58rem; color: var(--text-muted); text-align: center; margin-top: auto; letter-spacing: 0.05em; }
+.wtile-photo-badge {
+  position: absolute; bottom: 0.7rem; right: 0.7rem;
+  font-size: 0.6rem; color: var(--text-muted); opacity: 0.45;
+  display: flex; align-items: center; gap: 0.2rem;
+}
+.wtile-front-snippet {
+  font-size: 0.65rem; color: var(--text-muted); font-style: italic;
+  text-align: center; margin-top: 0.5rem;
+  max-width: 85%; margin-left: auto; margin-right: auto;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+
+/* Back */
+.wtile-back-scroll { overflow-y: auto; flex: 1; display: flex; flex-direction: column; }
+.wtile-back-photo-wrap {
+  width: 100%; height: 0; padding-bottom: 60%; overflow: hidden; flex-shrink: 0; position: relative;
+}
+.wtile-back-photo {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.wtile-back-text { padding: 0.7rem 1rem; flex: 1; display: flex; flex-direction: column; }
+.wtile-back-from { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rose-deep); margin-bottom: 0.3rem; font-weight: 500; }
+.wtile-back-msg {
+  font-family: 'Cormorant Garamond', serif; font-size: 0.92rem; color: var(--text);
+  line-height: 1.45; font-style: italic; margin-bottom: 0.4rem; flex: 1;
+}
+.wtile-back-meta { font-size: 0.55rem; color: var(--text-muted); margin-top: auto; padding-top: 0.3rem; border-top: 1px solid var(--border); }
+.wtile-back-meta span { display: inline-block; margin-right: 0.5rem; }
+.wtile-back-occasion { color: var(--gold); font-weight: 500; }
+
+/* Private tile */
+.wtile.is-private .wtile-front { background: linear-gradient(135deg, var(--white), rgba(0,0,0,0.015)); }
+.wtile.is-private .wtile-to-name { color: var(--text-light); }
+
+/* Featured tile */
+.wtile.is-featured .wtile-front { border-color: var(--gold-light); background: linear-gradient(145deg, var(--white), rgba(232,213,176,0.08)); }
+.wtile.is-featured .wtile-front::after {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--rose));
+}
+.wtile.is-featured .wtile-back { border-color: var(--gold-light); }
+
+/* Found animation */
+.wtile.found .wtile-front {
+  animation: tileGlow 2.8s ease forwards;
+}
+@keyframes tileGlow {
+  0% { box-shadow: 0 0 0 0 var(--rose-glow); }
+  25% { box-shadow: 0 0 0 14px var(--rose-glow), 0 0 50px var(--gold-glow); border-color: var(--gold); transform: scale(1.04); }
+  60% { box-shadow: 0 0 0 20px rgba(212,160,160,0.08), 0 0 60px rgba(201,169,110,0.06); }
+  100% { box-shadow: 0 0 0 6px rgba(212,160,160,0.06); border-color: var(--rose); transform: scale(1); }
+}
+
+/* Empty tile */
+.wtile-empty {
+  position: absolute; width: var(--tile-w); height: var(--tile-h);
+  border: 1px dashed rgba(0,0,0,0.04);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.3s;
+}
+.wtile-empty:hover { border-color: var(--rose); background: rgba(255,255,255,0.4); }
+.wtile-empty-inner { text-align: center; opacity: 0.2; transition: opacity 0.3s; }
+.wtile-empty:hover .wtile-empty-inner { opacity: 0.5; }
+.wtile-empty-plus { font-size: 1.4rem; color: var(--rose); line-height: 1; }
+.wtile-empty-txt { font-size: 0.6rem; color: var(--text-light); margin-top: 0.2rem; }
+
+/* Background dim when a tile is flipped */
+.wall-dim {
+  position: absolute; inset: 0; z-index: 1;
+  background: rgba(0,0,0,0.3);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s;
+}
+.wall-dim.active { opacity: 1; pointer-events: auto; }
+
+/* ══════════════════════════════════════════════════════════
+   PURCHASE MODAL
+   ══════════════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(0,0,0,0.35); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center;
+  padding: 1rem;
+}
+.modal-overlay.open { display: flex; animation: modalIn 0.4s; }
+@keyframes modalIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  background: var(--cream); width: 100%; max-width: 580px;
+  max-height: 90vh; overflow-y: auto;
+  padding: 2.5rem; position: relative;
+  animation: modalSlide 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes modalSlide { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+.modal-close {
+  position: absolute; top: 1.2rem; right: 1.2rem;
+  background: none; border: none; font-size: 1.2rem;
+  color: var(--text-muted); cursor: pointer; transition: color 0.3s;
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { color: var(--rose-deep); }
+
+.modal-label { font-size: 0.65rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--rose-deep); margin-bottom: 0.6rem; text-align: center; font-weight: 500; }
+.modal-title {
+  font-family: 'Cormorant Garamond', serif; font-weight: 300;
+  font-size: 1.8rem; text-align: center; color: var(--charcoal);
+  margin-bottom: 0.5rem;
+}
+.modal-desc { text-align: center; color: var(--text-light); font-size: 0.82rem; margin-bottom: 2rem; line-height: 1.6; }
+
+.f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.f-group { margin-bottom: 1rem; }
+.f-group.full { grid-column: 1 / -1; }
+.f-label { display: block; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.4rem; font-weight: 500; }
+.f-input, .f-select, .f-textarea {
+  width: 100%; padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border); background: var(--white);
+  font-family: 'Nunito Sans', sans-serif; font-size: 0.85rem;
+  color: var(--text); outline: none; transition: border-color 0.3s;
+}
+.f-input:focus, .f-select:focus, .f-textarea:focus { border-color: var(--rose); }
+.f-textarea { resize: vertical; min-height: 100px; }
+.f-hint { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+/* Privacy toggle */
+.privacy-options { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+.privacy-opt {
+  flex: 1; padding: 1rem; border: 1px solid var(--border);
+  background: var(--white); cursor: pointer; text-align: center;
+  transition: all 0.3s;
+}
+.privacy-opt.selected { border-color: var(--rose); background: var(--blush); }
+.privacy-opt-icon { font-size: 1.2rem; margin-bottom: 0.3rem; }
+.privacy-opt-name { font-size: 0.78rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.15rem; }
+.privacy-opt-desc { font-size: 0.65rem; color: var(--text-light); }
+
+/* Photo upload */
+.photo-upload-area {
+  border: 2px dashed var(--border); padding: 1.5rem;
+  text-align: center; cursor: pointer; transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+.photo-upload-area:hover { border-color: var(--rose); background: rgba(255,255,255,0.5); }
+.photo-upload-area.has-photo { border-style: solid; border-color: var(--gold-light); padding: 0; }
+.photo-preview { width: 100%; aspect-ratio: 1; object-fit: cover; display: none; }
+.photo-upload-area.has-photo .photo-preview { display: block; }
+.photo-upload-area.has-photo .photo-placeholder { display: none; }
+.photo-placeholder-icon { font-size: 1.5rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+.photo-placeholder-text { font-size: 0.75rem; color: var(--text-light); }
+.photo-placeholder-hint { font-size: 0.62rem; color: var(--text-muted); margin-top: 0.2rem; }
+.photo-remove {
+  position: absolute; top: 0.5rem; right: 0.5rem;
+  background: rgba(0,0,0,0.5); color: white; border: none;
+  width: 24px; height: 24px; border-radius: 50%;
+  font-size: 0.7rem; cursor: pointer; display: none;
+}
+.photo-upload-area.has-photo .photo-remove { display: flex; align-items: center; justify-content: center; }
+
+/* Reminder add-ons */
+.reminder-section { margin: 1.2rem 0; }
+.reminder-title { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; color: var(--charcoal); margin-bottom: 0.8rem; }
+.reminder-opts { display: flex; flex-direction: column; gap: 0.6rem; }
+.reminder-opt {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.8rem 1rem; border: 1px solid var(--border);
+  background: var(--white); cursor: pointer; transition: all 0.3s;
+}
+.reminder-opt.selected { border-color: var(--rose); background: rgba(243,227,221,0.3); }
+.reminder-radio {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1.5px solid var(--text-muted); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.3s;
+}
+.reminder-opt.selected .reminder-radio { border-color: var(--rose-deep); }
+.reminder-radio-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--rose-deep); transform: scale(0);
+  transition: transform 0.3s;
+}
+.reminder-opt.selected .reminder-radio-dot { transform: scale(1); }
+.reminder-info { flex: 1; }
+.reminder-name { font-size: 0.8rem; font-weight: 500; color: var(--charcoal); }
+.reminder-desc { font-size: 0.68rem; color: var(--text-light); margin-top: 0.1rem; }
+.reminder-price { font-size: 0.75rem; font-weight: 500; color: var(--gold); white-space: nowrap; }
+
+/* Divider */
+.modal-divider { height: 1px; background: var(--border); margin: 1.2rem 0; }
+
+/* Submit */
+.modal-submit { text-align: center; margin-top: 1.5rem; }
+.modal-submit .btn { padding: 1rem 3.5rem; }
+.modal-total { text-align: center; margin-top: 0.8rem; font-size: 0.78rem; color: var(--text-light); }
+.modal-total strong { color: var(--charcoal); font-weight: 600; }
+.modal-note { text-align: center; margin-top: 0.6rem; font-size: 0.7rem; color: var(--text-muted); }
+
+/* ══════════════════════════════════════════════════════════
+   TOAST
+   ══════════════════════════════════════════════════════════ */
+.toast {
+  position: fixed; bottom: 3rem; left: 50%; transform: translateX(-50%) translateY(16px);
+  background: var(--charcoal); color: var(--cream);
+  padding: 0.7rem 1.4rem; font-size: 0.78rem; z-index: 700;
+  opacity: 0; transition: all 0.4s; pointer-events: none; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   MOBILE MENU
+   ══════════════════════════════════════════════════════════ */
+.mobile-menu {
+  position: fixed; top: 0; right: -100%; width: 280px; height: 100vh;
+  background: var(--cream); z-index: 150;
+  transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: -8px 0 40px rgba(0,0,0,0.1);
+  padding: 5rem 2rem 2rem;
+}
+.mobile-menu.open { right: 0; }
+.mobile-menu-inner { display: flex; flex-direction: column; gap: 0.3rem; }
+.mobile-menu-inner a {
+  text-decoration: none; color: var(--text);
+  font-size: 1rem; padding: 0.8rem 0;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500; letter-spacing: 0.02em;
+  transition: color 0.3s;
+}
+.mobile-menu-inner a:hover { color: var(--rose-deep); }
+.mobile-menu-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.3);
+  z-index: 140; display: none;
+}
+.mobile-menu-backdrop.open { display: block; }
+
+.nav-hamburger.is-open span:nth-child(1) { top: 9px; transform: rotate(45deg); }
+.nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.is-open span:nth-child(3) { top: 9px; transform: rotate(-45deg); }
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-hamburger { display: block; }
+  .site-nav { padding: 0.8rem 1.2rem; }
+  .tiers-grid { grid-template-columns: 1fr 1fr; max-width: 500px; gap: 1rem; }
+  .tier { padding: 1.8rem 1.2rem; }
+  .tier-badge { font-size: 0.55rem; padding: 0.25rem 0.8rem; }
+  .steps-row { grid-template-columns: 1fr; gap: 1.8rem; }
+  .steps-row::before { display: none; }
+  .wall-teaser-grid { grid-template-columns: repeat(2, 1fr); }
+  .section { padding: 4rem 1.2rem; }
+  .section-title { font-size: 1.8rem; }
+  .f-row { grid-template-columns: 1fr; }
+  .wall-tagline { display: none; }
+  .modal { padding: 1.3rem; max-height: 95vh; }
+  .modal-title { font-size: 1.5rem; }
+  .privacy-options { flex-direction: column; }
+  :root { --tile-w: 170px; --tile-h: 200px; --gap: 10px; }
+  .minimap { display: none; }
+  .hero { min-height: 90vh; padding: 7rem 1.5rem 3rem; }
+  .hero h1 { font-size: 2.8rem; }
+  .hero-sub { font-size: 1rem; }
+  .about-content p { font-size: 1.1rem; }
+  .faq-q { font-size: 1rem; }
+  .wall-bar { padding: 0.7rem 0.8rem; gap: 0.4rem; }
+  .wall-search { width: 110px; font-size: 0.72rem; padding: 0.45rem 0.6rem; }
+  .wall-search:focus { width: 140px; }
+  .wall-search-btn { padding: 0.45rem 0.6rem; font-size: 0.65rem; }
+  .wall-dedicate-btn { padding: 0.45rem 0.7rem; font-size: 0.6rem; margin-left: 0.3rem; }
+  .wall-close { width: 32px; height: 32px; font-size: 0.85rem; }
+  .wall-coords { font-size: 0.58rem; bottom: 0.6rem; left: 0.8rem; }
+  .btn { padding: 0.85rem 2rem; font-size: 0.72rem; }
+  .tier-list li { font-size: 0.78rem; }
+  .tier-price { font-size: 0.78rem; }
+  .tier-name { font-size: 1.15rem; }
+  .tier-btn { padding: 0.6rem 1.2rem; font-size: 0.68rem; }
+  footer { padding: 2.5rem 1.2rem; }
+  .reminder-opt { padding: 0.65rem 0.8rem; }
+  .reminder-name { font-size: 0.75rem; }
+  .reminder-desc { font-size: 0.62rem; }
+  .reminder-price { font-size: 0.7rem; }
+  .photo-upload-area { padding: 1rem; }
+}
+@media (max-width: 480px) {
+  .wall-teaser-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .hero-btns { flex-direction: column; align-items: center; width: 100%; }
+  .hero-btns .btn { width: 100%; text-align: center; }
+  .tiers-grid { grid-template-columns: 1fr; max-width: 320px; }
+  .hero h1 { font-size: 2.2rem; }
+  .hero { padding: 6.5rem 1rem 2.5rem; }
+  .section { padding: 3rem 1rem; }
+  .section-title { font-size: 1.5rem; }
+  .section-sub { font-size: 0.82rem; }
+  :root { --tile-w: 150px; --tile-h: 180px; --gap: 8px; }
+  .modal { padding: 1rem; }
+  .modal-title { font-size: 1.3rem; }
+  .f-input, .f-select, .f-textarea { font-size: 0.82rem; padding: 0.6rem 0.7rem; }
+  .f-label { font-size: 0.6rem; }
+  .wt-tile { padding: 0.8rem; }
+  .wt-names { font-size: 0.8rem; }
+  .wt-msg { font-size: 0.65rem; }
+  .nav-logo { font-size: 1.2rem; }
+  .wall-bar { flex-wrap: wrap; justify-content: center; gap: 0.3rem; }
+  .wall-search-area { width: 100%; justify-content: center; }
+  .about-content p { font-size: 1rem; }
+  .step p { font-size: 0.78rem; }
+  .faq-a p { font-size: 0.8rem; }
+}
+@media (max-width: 360px) {
+  .hero h1 { font-size: 1.9rem; }
+  :root { --tile-w: 140px; --tile-h: 170px; }
+  .wall-search-area { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ NAVIGATION ═══════════════ -->
+<nav class="site-nav" id="siteNav">
+  <a href="#" class="nav-logo">AWY</a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#tiers">Tiles</a>
+    <a href="#how">How It Works</a>
+    <a href="#wallTeaser">The Wall</a>
+    <a href="#faq">FAQ</a>
+    <a href="#" class="nav-cta" onclick="openModal(); return false;">Dedicate Now</a>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ═══════════════ MOBILE MENU ═══════════════ -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <a href="#about" onclick="closeMobileMenu()">About</a>
+    <a href="#tiers" onclick="closeMobileMenu()">Tiles</a>
+    <a href="#how" onclick="closeMobileMenu()">How It Works</a>
+    <a href="#wallTeaser" onclick="closeMobileMenu()">The Wall</a>
+    <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
+      <button class="btn btn-gold" style="width:100%;text-align:center;" onclick="closeMobileMenu();openModal();">Dedicate Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero" id="hero">
+  <p class="hero-eyebrow">A Digital Love Wall</p>
+  <h1>Always With <em>You.</em></h1>
+  <p class="hero-sub">A permanent space where your love lives forever — visible, remembered, infinite.</p>
+  <div class="hero-btns">
+    <button class="btn" onclick="openModal()">Dedicate Now</button>
+    <button class="btn btn-outline" onclick="openWall()">Explore the Wall</button>
+  </div>
+  <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- ═══════════════ ABOUT ═══════════════ -->
+<section class="section about" id="about">
+  <div class="reveal">
+    <p class="section-label">About AWY</p>
+    <h2 class="section-title">Love Deserves a Place<br>That Lasts</h2>
+    <div class="about-content">
+      <p>AWY is an infinite digital wall with space for one million dedications. A quiet corner of the internet where your words stay — untouched, unchanged, forever yours. Each year, both you and your loved one receive a gentle reminder of the message you once wrote. Because some things should never be forgotten.</p>
+      <div class="about-divider"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TIERS ═══════════════ -->
+<section class="section" id="tiers">
+  <div class="reveal">
+    <p class="section-label">Choose Your Tile</p>
+    <h2 class="section-title">One Tile. Infinite Meaning.</h2>
+    <p class="section-sub">Select the tile that best holds your words. Every option lives forever on the wall.</p>
+  </div>
+  <div class="tiers-grid reveal">
+    <div class="tier" onclick="openModal('basic')">
+      <div class="tier-icon"><svg viewBox="0 0 48 48"><path d="M24 42s-18-12-18-24a10 10 0 0 1 18-6 10 10 0 0 1 18 6c0 12-18 24-18 24z"/></svg></div>
+      <h3 class="tier-name">Basic Tile</h3>
+      <p class="tier-price">₹199</p>
+      <ul class="tier-list"><li>Your name &amp; theirs</li><li>Short dedication message</li><li>Permanent placement</li><li>1 annual reminder</li></ul>
+      <span class="tier-btn">Select</span>
+    </div>
+    <div class="tier is-featured" onclick="openModal('premium')">
+      <div class="tier-badge">Most Popular</div>
+      <div class="tier-icon"><svg viewBox="0 0 48 48"><path d="M24 42s-18-12-18-24a10 10 0 0 1 18-6 10 10 0 0 1 18 6c0 12-18 24-18 24z"/><circle cx="24" cy="20" r="4"/></svg></div>
+      <h3 class="tier-name">Premium Tile</h3>
+      <p class="tier-price">₹499</p>
+      <ul class="tier-list"><li>Your name &amp; theirs</li><li>Longer personal message</li><li>Photo upload</li><li>Permanent placement</li><li>1 annual reminder</li></ul>
+      <span class="tier-btn">Select</span>
+    </div>
+    <div class="tier" onclick="openModal('featured')">
+      <div class="tier-icon"><svg viewBox="0 0 48 48"><path d="M24 42s-18-12-18-24a10 10 0 0 1 18-6 10 10 0 0 1 18 6c0 12-18 24-18 24z"/><path d="M24 4l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z" stroke-width="0.8"/></svg></div>
+      <h3 class="tier-name">Featured Tile</h3>
+      <p class="tier-price">₹999</p>
+      <ul class="tier-list"><li>Your name &amp; theirs</li><li>Extended message</li><li>Photo upload</li><li>Highlighted on the wall</li><li>Priority placement</li><li>1 annual reminder</li></ul>
+      <span class="tier-btn">Select</span>
+    </div>
+    <div class="tier" onclick="openModal('choose')" style="border-color:var(--gold-light);background:linear-gradient(180deg,var(--white),rgba(201,169,110,0.06));">
+      <div class="tier-badge" style="background:var(--rose-deep);">Exclusive</div>
+      <div class="tier-icon"><svg viewBox="0 0 48 48"><path d="M24 42s-18-12-18-24a10 10 0 0 1 18-6 10 10 0 0 1 18 6c0 12-18 24-18 24z"/><text x="24" y="24" text-anchor="middle" font-size="12" fill="none" stroke="currentColor" stroke-width="0.8" font-family="serif">#</text></svg></div>
+      <h3 class="tier-name">Choose Your Number</h3>
+      <p class="tier-price">₹1,999</p>
+      <ul class="tier-list"><li>Pick your own tile number</li><li>Special / lucky / birthday numbers</li><li>All Featured Tile benefits</li><li>Photo upload</li><li>Highlighted on the wall</li><li>1 annual reminder</li></ul>
+      <span class="tier-btn" style="border-color:var(--gold);color:var(--gold);">Select</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+<section class="section how" id="how">
+  <div class="reveal">
+    <p class="section-label">How It Works</p>
+    <h2 class="section-title">Three Simple Steps</h2>
+    <p class="section-sub">It takes just a moment to create something that lasts forever.</p>
+  </div>
+  <div class="steps-row reveal">
+    <div class="step"><div class="step-num">1</div><h3>Choose Your Tile</h3><p>Select Basic, Premium, or Featured — each one permanent and personal.</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Write Your Message</h3><p>Dedicate your tile with words meant for someone you love. Add a photo too.</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Stay Forever</h3><p>Your tile lives on the infinite wall. Both of you get reminded every year.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════════ WALL TEASER ═══════════════ -->
+<section class="section wall-teaser" id="wallTeaser">
+  <div class="reveal">
+    <p class="section-label">The Love Wall</p>
+    <h2 class="section-title">One Million Tiles.<br>One Infinite Wall.</h2>
+    <p class="section-sub">An infinite grid with space for 1,000,000 dedications. No beginning, no end. Scroll, drag, and discover the love that lives here.</p>
+  </div>
+  <div class="wall-teaser-grid reveal" id="teaserGrid"></div>
+  <div class="wall-teaser-center reveal">
+    <button class="btn" onclick="openWall()">Enter the Wall</button>
+  </div>
+</section>
+
+<!-- ═══════════════ FAQ ═══════════════ -->
+<section class="section faq" id="faq">
+  <div class="reveal">
+    <p class="section-label">Questions</p>
+    <h2 class="section-title">Frequently Asked</h2>
+  </div>
+  <div class="faq-list reveal" id="faqList">
+    <div class="faq-item"><div class="faq-q"><span>Is this permanent?</span><span class="faq-toggle">+</span></div><div class="faq-a"><p>Yes. Once your tile is placed on the wall, it stays there permanently. Your message is preserved exactly as you wrote it, for as long as AWY exists.</p></div></div>
+    <div class="faq-item"><div class="faq-q"><span>Can I edit my message later?</span><span class="faq-toggle">+</span></div><div class="faq-a"><p>To keep the authenticity of each dedication, messages cannot be edited after placement. We encourage you to take a moment and write exactly what you feel.</p></div></div>
+    <div class="faq-item"><div class="faq-q"><span>Will both people receive reminders?</span><span class="faq-toggle">+</span></div><div class="faq-a"><p>Yes. Both the dedicator and the recipient receive an annual reminder via email and WhatsApp (if provided) — a gentle nudge that someone loves them. You can upgrade to 12 surprise reminders or set custom dates.</p></div></div>
+    <div class="faq-item"><div class="faq-q"><span>Is this public?</span><span class="faq-toggle">+</span></div><div class="faq-a"><p>You choose. Public tiles are visible and searchable. Private tiles show "Private Dedication" and are only accessible via a direct block number or private link.</p></div></div>
+    <div class="faq-item"><div class="faq-q"><span>Is this a physical product?</span><span class="faq-toggle">+</span></div><div class="faq-a"><p>No. AWY is a digital product — there's nothing to ship. Your tile exists as a permanent dedication on our online love wall.</p></div></div>
+    <div class="faq-item"><div class="faq-q"><span>What are the reminder add-ons?</span><span class="faq-toggle">+</span></div><div class="faq-a"><p>Every tile includes 1 free annual reminder. You can upgrade to 12 Surprise Reminders throughout the year, or set Custom Scheduled Reminders for specific dates like birthdays and anniversaries.</p></div></div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <div class="footer-logo">AWY</div>
+  <p>Always With You · A digital space for love that lasts.</p>
+  <p style="margin-top:0.6rem">Founded by Samyak Nagori & Vaibhav Jain</p>
+  <p style="margin-top:0.4rem">Made with ♥</p>
+</footer>
+
+<!-- ═══════════════ THE WALL (FULLSCREEN OVERLAY) ═══════════════ -->
+<div class="wall-overlay" id="wallOverlay">
+  <div class="wall-dim" id="wallDim" style="display:none"></div>
+  <div class="wall-bar">
+    <div style="display:flex;align-items:center;gap:0.8rem;">
+      <button class="wall-close" onclick="closeWall()">✕</button>
+      <a href="#" class="nav-logo" style="font-size:1.1rem;">AWY</a>
+    </div>
+    <span class="wall-tagline">The Love Wall — 1,000,000 Tiles, Infinite in All Directions</span>
+    <div class="wall-search-area">
+      <input class="wall-search" id="wallSearch" type="text" placeholder="Block number…">
+      <button class="wall-search-btn" onclick="searchTile()">Find</button>
+      <button class="wall-dedicate-btn" onclick="openModal()">+ Dedicate</button>
+    </div>
+  </div>
+  <div class="wall-coords" id="wallCoords">0, 0</div>
+  <div class="minimap" id="minimap"></div>
+  <div class="wall-vp" id="wallVp">
+    <div class="wall-cv" id="wallCv"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ PURCHASE MODAL ═══════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <p class="modal-label">Create Your Tile</p>
+    <h2 class="modal-title">Dedicate Your Love</h2>
+    <p class="modal-desc">This isn't just a purchase. It's a permanent act of love.</p>
+
+    <!-- Tile Type -->
+    <div class="f-group">
+      <label class="f-label">Tile Type</label>
+      <select class="f-select" id="fTileType" onchange="updateTotal()">
+        <option value="199">Basic Tile – ₹199</option>
+        <option value="499" selected>Premium Tile – ₹499</option>
+        <option value="999">Featured Tile – ₹999</option>
+        <option value="1999">Choose Your Number – ₹1,999</option>
+      </select>
+    </div>
+
+    <div class="f-group" id="chooseNumGroup" style="display:none;">
+      <label class="f-label">Your Desired Tile Number</label>
+      <div style="position:relative;">
+        <input class="f-input" type="number" id="fDesiredNum" placeholder="e.g. 143, 786, 1314, your birthday..." min="1" max="1000000" oninput="checkNumAvail()">
+        <div id="numStatus" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:0.72rem;font-weight:500;display:none;"></div>
+      </div>
+      <p class="f-hint" id="numHint">Enter any number from 1 to 1,000,000. Availability checks instantly.</p>
+    </div>
+
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Your Name</label><input class="f-input" type="text" id="fFromName" placeholder="Who is this from?"></div>
+      <div class="f-group"><label class="f-label">Dedicated To</label><input class="f-input" type="text" id="fToName" placeholder="Who is this for?"></div>
+    </div>
+
+    <div class="f-group">
+      <label class="f-label">Your Message</label>
+      <textarea class="f-textarea" id="fMessage" placeholder="Write your dedication…" maxlength="500"></textarea>
+      <p class="f-hint">Up to 500 characters</p>
+    </div>
+
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Dedication Date</label><input class="f-input" type="date" id="fDate"></div>
+      <div class="f-group">
+        <label class="f-label">Occasion</label>
+        <select class="f-select" id="fOccasion">
+          <option>Anniversary</option><option>Birthday</option><option>Wedding</option>
+          <option>Valentine's Day</option><option>Mother's Day</option><option>Father's Day</option>
+          <option>Friendship</option><option>In Memory</option><option>Just Because</option><option>Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Your Email</label><input class="f-input" type="email" id="fYourEmail" placeholder="your@email.com"></div>
+      <div class="f-group"><label class="f-label">Recipient's Email</label><input class="f-input" type="email" id="fTheirEmail" placeholder="their@email.com"></div>
+    </div>
+
+    <div class="f-row">
+      <div class="f-group"><label class="f-label">Your WhatsApp <span style="color:var(--text-muted)">(for reminders)</span></label><input class="f-input" type="tel" id="fYourWA" placeholder="+91 9876543210"></div>
+      <div class="f-group"><label class="f-label">Recipient's WhatsApp <span style="color:var(--text-muted)">(optional)</span></label><input class="f-input" type="tel" id="fTheirWA" placeholder="+91 9876543210"></div>
+    </div>
+
+    <div class="f-group">
+      <label class="f-label">Instagram Username <span style="color:var(--text-muted)">(Optional)</span></label>
+      <input class="f-input" type="text" id="fInsta" placeholder="@username">
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <!-- Privacy -->
+    <div class="f-group">
+      <label class="f-label">Privacy</label>
+      <div class="privacy-options">
+        <div class="privacy-opt selected" data-val="public" onclick="selectPrivacy(this)">
+          <div class="privacy-opt-icon">🌍</div>
+          <div class="privacy-opt-name">Public</div>
+          <div class="privacy-opt-desc">Visible, searchable, shareable</div>
+        </div>
+        <div class="privacy-opt" data-val="private" onclick="selectPrivacy(this)">
+          <div class="privacy-opt-icon">🔒</div>
+          <div class="privacy-opt-name">Private</div>
+          <div class="privacy-opt-desc">Hidden — viewable via link only</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <!-- Photo Upload -->
+    <div class="f-group" id="photoGroup">
+      <label class="f-label">Photo <span style="color:var(--text-muted)">(Premium & Featured)</span></label>
+      <div class="photo-upload-area" id="photoArea" onclick="document.getElementById('photoInput').click()">
+        <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhoto(this)">
+        <img class="photo-preview" id="photoPreview">
+        <button class="photo-remove" onclick="removePhoto(event)">✕</button>
+        <div class="photo-placeholder">
+          <div class="photo-placeholder-icon">📷</div>
+          <div class="photo-placeholder-text">Click to upload a photo</div>
+          <div class="photo-placeholder-hint">Square crop recommended · Max 5MB</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <!-- Reminders -->
+    <div class="reminder-section">
+      <p class="reminder-title">Reminder Add-Ons</p>
+      <div class="reminder-opts">
+        <div class="reminder-opt selected" data-price="0" onclick="selectReminder(this)">
+          <div class="reminder-radio"><div class="reminder-radio-dot"></div></div>
+          <div class="reminder-info">
+            <div class="reminder-name">Annual Reminder</div>
+            <div class="reminder-desc">1 email on the dedication date, every year</div>
+          </div>
+          <div class="reminder-price">Included</div>
+        </div>
+        <div class="reminder-opt" data-price="149" onclick="selectReminder(this)">
+          <div class="reminder-radio"><div class="reminder-radio-dot"></div></div>
+          <div class="reminder-info">
+            <div class="reminder-name">12 Surprise Reminders</div>
+            <div class="reminder-desc">Random love reminders throughout the year</div>
+          </div>
+          <div class="reminder-price">+ ₹149</div>
+        </div>
+        <div class="reminder-opt" data-price="299" onclick="selectReminder(this)">
+          <div class="reminder-radio"><div class="reminder-radio-dot"></div></div>
+          <div class="reminder-info">
+            <div class="reminder-name">Custom Scheduled</div>
+            <div class="reminder-desc">Choose your own reminder dates (up to 12)</div>
+          </div>
+          <div class="reminder-price">+ ₹299</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-divider"></div>
+
+    <div class="modal-submit">
+      <button class="btn btn-gold" onclick="placeTile()">Place My Tile Forever</button>
+    </div>
+    <p class="modal-total">Total: <strong id="totalPrice">₹499</strong></p>
+    <p class="modal-note">Digital product — no shipping · Your tile goes live within 24 hours</p>
+  </div>
+</div>
+
+<!-- ═══════════════ MOBILE MENU BACKDROP ═══════════════ -->
+<div class="mobile-menu-backdrop" id="mobileBackdrop" onclick="closeMobileMenu()"></div>
+
+<!-- ═══════════════ TOAST ═══════════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════ SCRIPTS ═══════════════ -->
+<script>
+/* ─── DATA ─── */
+const NAMES = ['Aarav','Aditi','Arjun','Ananya','Kabir','Meera','Rohan','Priya','Vivaan','Isha','Sai','Diya','Aditya','Nisha','Dev','Kavya','Arnav','Simran','Karan','Pooja','Harsh','Neha','Raj','Tara','Yash','Mira','Sahil','Anjali','Rahul','Sneha','Kunal','Shruti','Varun','Swati','Nikhil','Pallavi','Dhruv','Megha','Parth','Zara','Vikram','Sonali','Chirag','Aisha','Siddharth','Lakshmi','Pranav','Bhavna','Mohit','Tanvi'];
+const MSGS = [
+  "Through every season, it's always been you.","You gave me roots and wings.","The best decision was choosing us.",
+  "You taught me strength quietly.","Some love stories never end.","Your lullabies echo in my heart.",
+  "You are my calm in every storm.","My first friend, my forever protector.","In your eyes I found home.",
+  "You make the ordinary feel sacred.","Every sunrise reminds me of your smile.","Distance means nothing when someone means everything.",
+  "You believed in me first.","Our love is written in the stars.","Thank you for being my constant.",
+  "You turned my world into poetry.","I carry your heart in mine.","Forever isn't long enough.",
+  "You are the reason I believe in magic.","Across lifetimes, I'd find you again.",
+  "Your kindness changed my life.","To the one who made me brave.","No words are enough, but here are a few.",
+  "My heart remembers what words cannot.","You held me together.","For the one who sees the real me.",
+  "A thousand miles apart, yet never far.","Your voice is my favorite sound.",
+  "With you, silence is never empty.","The world is better because you exist.",
+  "Growing old with you is my plan.","You are the light I never want to lose.",
+  "This one is for the years ahead.","Thank you for staying when it was hard.",
+  "Because some people deserve to be remembered forever."
+];
+const OCCASIONS = ['Anniversary','Birthday','Wedding','Valentine\'s Day','Mother\'s Day','Father\'s Day','Friendship','In Memory','Just Because'];
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const RELS = ['→','♥','&'];
+
+function rand(a){ return a[Math.floor(Math.random()*a.length)]; }
+function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+
+const GRID_COLS=1000, GRID_ROWS=1000, TOTAL=2000, MAX_TILES=1000000;
+const CELL_W = 220+14, CELL_H = 240+14;
+const centerX = Math.floor(GRID_COLS/2), centerY = Math.floor(GRID_ROWS/2);
+
+const tiles = [];
+const occupied = new Set();
+for(let i=0;i<TOTAL;i++){
+  let gx,gy,k;
+  do {
+    // Cluster tiles around center with wide spread to show scale
+    const sx=Math.floor(GRID_COLS*0.12), sy=Math.floor(GRID_ROWS*0.12);
+    gx=centerX+Math.round((Math.random()+Math.random()+Math.random()-1.5)*sx);
+    gy=centerY+Math.round((Math.random()+Math.random()+Math.random()-1.5)*sy);
+    gx=Math.max(0,Math.min(GRID_COLS-1,gx));
+    gy=Math.max(0,Math.min(GRID_ROWS-1,gy));
+    k=gx+','+gy;
+  } while(occupied.has(k));
+  occupied.add(k);
+  const n1=rand(NAMES); let n2=rand(NAMES); while(n2===n1) n2=rand(NAMES);
+  const priv = Math.random()<0.15;
+  const feat = !priv && Math.random()<0.1;
+  tiles.push({
+    gx,gy, block:1000+i, from:n1, to:n2, rel:rand(RELS),
+    message:rand(MSGS), date:`${String(randInt(1,28)).padStart(2,'0')} ${rand(MONTHS)} ${rand(['2025','2026'])}`,
+    occasion:rand(OCCASIONS), featured:feat, private:priv,
+    hasPhoto: (!priv && (feat || Math.random()<0.4))
+  });
+}
+const tileMap={}; tiles.forEach(t=>tileMap[t.gx+','+t.gy]=t);
+const blockIdx={}; tiles.forEach(t=>blockIdx[t.block]=t);
+
+// Generate unique placeholder photo SVGs for tiles with photos
+const PHOTO_PALETTES = [
+  ['#F5E6E0','#D4A0A0','#B87878'], ['#E8D5B0','#C9A96E','#A0855A'],
+  ['#E0E8F5','#8FA8C9','#6A82A8'], ['#E5F0E0','#8CB88A','#6A9A68'],
+  ['#F5E0F0','#C98AAF','#A86A8E'], ['#F0E8E0','#C9B08A','#A8906A'],
+  ['#E0F0F5','#8AC0C9','#6AA0A8'], ['#F5F0E0','#C9C08A','#A8A06A'],
+  ['#F0E0E5','#C98A9A','#A86A7A'], ['#E0E5F0','#8A9AC9','#6A7AA8']
+];
+function generatePhotoSVG(from, to, idx) {
+  const pal = PHOTO_PALETTES[idx % PHOTO_PALETTES.length];
+  const initials = (from[0] + '♥' + to[0]).toUpperCase();
+  return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="300" height="225" viewBox="0 0 300 225">
+    <defs>
+      <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:${pal[0]}"/>
+        <stop offset="50%" style="stop-color:${pal[1]}"/>
+        <stop offset="100%" style="stop-color:${pal[2]}"/>
+      </linearGradient>
+    </defs>
+    <rect width="300" height="225" fill="url(#g)"/>
+    <circle cx="150" cy="90" r="35" fill="${pal[2]}" opacity="0.2"/>
+    <circle cx="100" cy="160" r="20" fill="${pal[0]}" opacity="0.3"/>
+    <circle cx="220" cy="140" r="25" fill="${pal[0]}" opacity="0.25"/>
+    <text x="150" y="100" text-anchor="middle" font-family="serif" font-size="28" fill="${pal[2]}" opacity="0.6">${initials}</text>
+    <text x="150" y="180" text-anchor="middle" font-family="serif" font-size="11" fill="${pal[2]}" opacity="0.4" letter-spacing="2">MEMORY</text>
+  </svg>`)}`;
+}
+
+/* ─── SITE NAV SCROLL ─── */
+const siteNav = document.getElementById('siteNav');
+window.addEventListener('scroll', ()=> siteNav.classList.toggle('scrolled', window.scrollY>60));
+
+/* ─── MOBILE MENU ─── */
+function toggleMobileMenu(){
+  const menu = document.getElementById('mobileMenu');
+  const backdrop = document.getElementById('mobileBackdrop');
+  const btn = document.getElementById('navHamburger');
+  const isOpen = menu.classList.contains('open');
+  menu.classList.toggle('open');
+  backdrop.classList.toggle('open');
+  btn.classList.toggle('is-open');
+  document.body.style.overflow = isOpen ? '' : 'hidden';
+}
+function closeMobileMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('mobileBackdrop').classList.remove('open');
+  document.getElementById('navHamburger').classList.remove('is-open');
+  document.body.style.overflow = '';
+}
+
+/* ─── REVEAL ─── */
+const revObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('vis'); });
+}, {threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* ─── FAQ ─── */
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.querySelector('.faq-q').addEventListener('click',()=>{
+    const was=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!was) item.classList.add('open');
+  });
+});
+
+/* ─── WALL TEASER ─── */
+(function buildTeaser(){
+  const grid=document.getElementById('teaserGrid');
+  const sample=tiles.slice(0,12);
+  sample.forEach(t=>{
+    const d=document.createElement('div');
+    d.className='wt-tile'+(t.featured?' wt-feat':'');
+    d.innerHTML=`<div class="wt-heart">♥</div><div class="wt-names">${t.from} ${t.rel} ${t.to}</div><div class="wt-msg">"${t.private?'Private Dedication':t.message}"</div>`;
+    grid.appendChild(d);
+  });
+})();
+
+/* ═══════════════ WALL LOGIC ═══════════════ */
+let wallOpen=false, panX=0, panY=0, targetX=0, targetY=0;
+let isDrag=false, dragSX,dragSY,dragPX,dragPY, wasDragged=false;
+let velX=0,velY=0,lastMX=0,lastMY=0,lastMT=0;
+let animTo=false, rendered={}, flippedTile=null;
+let vw=innerWidth, vh=innerHeight;
+
+const wallOverlay=document.getElementById('wallOverlay');
+const wallCv=document.getElementById('wallCv');
+const wallVp=document.getElementById('wallVp');
+const wallDim=document.getElementById('wallDim');
+const coordsEl=document.getElementById('wallCoords');
+const mmEl=document.getElementById('minimap');
+
+function openWall(){
+  wallOverlay.classList.add('open');
+  wallOpen=true;
+  document.body.style.overflow='hidden';
+  panX=-(centerX*CELL_W - vw/2 + 220/2);
+  panY=-(centerY*CELL_H - vh/2 + 240/2);
+  targetX=panX; targetY=panY;
+  initMinimap();
+  rafLoop();
+}
+function closeWall(){
+  wallOverlay.classList.remove('open');
+  wallOpen=false;
+  document.body.style.overflow='';
+  unflipAll();
+  // Clean up rendered tiles
+  for(const k in rendered){ rendered[k].remove(); delete rendered[k]; }
+}
+
+// Minimap
+function initMinimap(){
+  mmEl.innerHTML='';
+  const mw=130,mh=95;
+  const sx=mw/(GRID_COLS*CELL_W), sy=mh/(GRID_ROWS*CELL_H);
+  tiles.forEach(t=>{
+    const d=document.createElement('div');
+    d.className='mm-dot'+(t.featured?' mm-feat':'');
+    d.style.left=(t.gx*CELL_W*sx)+'px';
+    d.style.top=(t.gy*CELL_H*sy)+'px';
+    mmEl.appendChild(d);
+  });
+  const vp=document.createElement('div');
+  vp.className='mm-vp'; vp.id='mmVp';
+  mmEl.appendChild(vp);
+}
+function updateMinimap(){
+  const vp=document.getElementById('mmVp'); if(!vp) return;
+  const mw=130,mh=95;
+  const tw=GRID_COLS*CELL_W, th=GRID_ROWS*CELL_H;
+  const sx=mw/tw, sy=mh/th;
+  vp.style.left=(-panX*sx)+'px'; vp.style.top=(-panY*sy)+'px';
+  vp.style.width=(vw*sx)+'px'; vp.style.height=(vh*sy)+'px';
+}
+
+// Minimap click navigation
+mmEl.addEventListener('click', e=>{
+  const rect=mmEl.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  const tw=GRID_COLS*CELL_W, th=GRID_ROWS*CELL_H;
+  const sx=130/tw, sy=95/th;
+  targetX=-(mx/sx - vw/2);
+  targetY=-(my/sy - vh/2);
+  animTo=true; velX=0; velY=0;
+});
+
+// Render
+const BUFFER=2;
+function getRange(){
+  return {
+    c0:Math.max(0, Math.floor(-panX/CELL_W)-BUFFER),
+    c1:Math.min(GRID_COLS-1, Math.floor((-panX+vw)/CELL_W)+BUFFER),
+    r0:Math.max(0, Math.floor(-panY/CELL_H)-BUFFER),
+    r1:Math.min(GRID_ROWS-1, Math.floor((-panY+vh)/CELL_H)+BUFFER)
+  };
+}
+
+function renderTiles(){
+  const {c0,c1,r0,r1}=getRange();
+  const newK=new Set();
+  for(let r=r0;r<=r1;r++){
+    for(let c=c0;c<=c1;c++){
+      const k=c+','+r;
+      newK.add(k);
+      if(rendered[k]) continue;
+      const t=tileMap[k];
+      const x=c*CELL_W, y=r*CELL_H;
+      if(t){
+        const el=document.createElement('div');
+        el.className='wtile'+(t.featured?' is-featured':'')+(t.private?' is-private':'');
+        el.style.left=x+'px'; el.style.top=y+'px';
+        el.dataset.block=t.block; el.dataset.key=k;
+
+        const lockIcon = t.private ? '<span class="wtile-lock">🔒</span>' : '';
+        const toDisplay = t.private ? 'Private Dedication' : t.to;
+
+        // Back side photo
+        let photoBackHtml = '';
+        if(t.hasPhoto && !t.private) {
+          const photoSrc = generatePhotoSVG(t.from, t.to, t.block);
+          photoBackHtml = `<div class="wtile-back-photo-wrap"><img class="wtile-back-photo" src="${photoSrc}" alt="Memory"></div>`;
+        }
+
+        // Back side message
+        const backMsg = t.private ? 'This dedication is private.' : t.message;
+        const backFrom = t.private ? '[Private]' : t.from;
+
+        // Photo badge for front
+        const photoBadge = (t.hasPhoto && !t.private) ? '<div class="wtile-photo-badge">📷 Photo</div>' : '';
+        // Short message snippet for front
+        const snippet = t.private ? '' : `<div class="wtile-front-snippet">"${t.message.substring(0,35)}…"</div>`;
+
+        el.innerHTML=`
+          <div class="wtile-inner">
+            <div class="wtile-front">
+              <div class="wtile-front-top"><span class="wtile-block">#${t.block}</span>${lockIcon}</div>
+              <div class="wtile-front-body">
+                <div class="wtile-accent"></div>
+                <div class="wtile-to-label">Dedicated to</div>
+                <div class="wtile-to-name">${toDisplay}</div>
+                ${snippet}
+              </div>
+              ${photoBadge}
+              <div class="wtile-front-hint">Tap to read</div>
+            </div>
+            <div class="wtile-back">
+              <div class="wtile-back-scroll">
+                ${photoBackHtml}
+                <div class="wtile-back-text">
+                  <div class="wtile-back-from">From ${backFrom}</div>
+                  <div class="wtile-back-msg">"${backMsg}"</div>
+                  <div class="wtile-back-meta">
+                    <span>${t.date}</span>
+                    <span class="wtile-back-occasion">${t.occasion}</span>
+                    <span>#${t.block}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        el.addEventListener('click', e=>{
+          e.stopPropagation();
+          if(wasDragged) return;
+          toggleFlip(el, k);
+        });
+        wallCv.appendChild(el);
+        rendered[k]=el;
+      } else if((c+r)%5===0){
+        const el=document.createElement('div');
+        el.className='wtile-empty';
+        el.style.left=x+'px'; el.style.top=y+'px';
+        el.innerHTML=`<div class="wtile-empty-inner"><div class="wtile-empty-plus">+</div><div class="wtile-empty-txt">Place yours</div></div>`;
+        el.addEventListener('click', e=>{ e.stopPropagation(); openModal(); });
+        wallCv.appendChild(el);
+        rendered[k]=el;
+      }
+    }
+  }
+  for(const k in rendered){ if(!newK.has(k)){ rendered[k].remove(); delete rendered[k]; } }
+}
+
+function toggleFlip(el, key){
+  if(flippedTile && flippedTile!==key){
+    const prev=rendered[flippedTile];
+    if(prev){ prev.classList.remove('flipped'); prev.style.zIndex=''; }
+  }
+  const isFlipping = !el.classList.contains('flipped');
+  el.classList.toggle('flipped');
+  if(isFlipping){
+    flippedTile=key;
+    el.style.zIndex='100';
+  } else {
+    flippedTile=null;
+    el.style.zIndex='';
+  }
+}
+
+function unflipAll(){
+  if(flippedTile && rendered[flippedTile]){
+    rendered[flippedTile].classList.remove('flipped');
+    rendered[flippedTile].style.zIndex='';
+  }
+  flippedTile=null;
+}
+
+// Click on empty wall space to unflip
+wallVp.addEventListener('click', function(e){
+  if(flippedTile && !e.target.closest('.wtile') && !e.target.closest('.wtile-empty')){
+    unflipAll();
+  }
+});
+
+function applyPan(){
+  wallCv.style.transform=`translate3d(${panX}px,${panY}px,0)`;
+  const cx=Math.floor(-panX/CELL_W), cy=Math.floor(-panY/CELL_H);
+  coordsEl.textContent=cx+', '+cy;
+}
+
+function rafLoop(){
+  if(!wallOpen) return;
+  if(animTo){
+    panX+=(targetX-panX)*0.065;
+    panY+=(targetY-panY)*0.065;
+    if(Math.abs(panX-targetX)<0.5 && Math.abs(panY-targetY)<0.5){
+      panX=targetX; panY=targetY; animTo=false;
+    }
+  } else if(!isDrag){
+    panX+=velX; panY+=velY;
+    velX*=0.93; velY*=0.93;
+    if(Math.abs(velX)<0.08) velX=0;
+    if(Math.abs(velY)<0.08) velY=0;
+  }
+  applyPan(); renderTiles(); updateMinimap();
+  requestAnimationFrame(rafLoop);
+}
+
+// Drag
+function onDown(e){
+  if(e.target.closest('.wall-bar')||e.target.closest('.minimap')||e.target.closest('.modal-overlay')) return;
+  isDrag=true; wasDragged=false; animTo=false; velX=0; velY=0;
+  dragSX=e.clientX; dragSY=e.clientY;
+  dragPX=panX; dragPY=panY;
+  lastMX=e.clientX; lastMY=e.clientY; lastMT=Date.now();
+}
+function onMove(e){
+  if(!isDrag) return;
+  const dx=e.clientX-dragSX, dy=e.clientY-dragSY;
+  if(Math.abs(dx)>5||Math.abs(dy)>5) wasDragged=true;
+  panX=dragPX+dx;
+  panY=dragPY+dy;
+  const now=Date.now(), dt=now-lastMT;
+  if(dt>0){ velX=(e.clientX-lastMX)*0.35; velY=(e.clientY-lastMY)*0.35; }
+  lastMX=e.clientX; lastMY=e.clientY; lastMT=now;
+}
+function onUp(){ isDrag=false; }
+
+wallVp.addEventListener('pointerdown', onDown);
+window.addEventListener('pointermove', onMove);
+window.addEventListener('pointerup', onUp);
+wallVp.addEventListener('wheel', e=>{
+  e.preventDefault(); animTo=false;
+  panX-=e.deltaX; panY-=e.deltaY;
+}, {passive:false});
+
+// Search
+function searchTile(){
+  const v=document.getElementById('wallSearch').value.trim();
+  if(!v) return;
+  const bn=parseInt(v,10);
+  const t=blockIdx[bn];
+  if(!t){ showToast(`Block #${v} not found`); return; }
+  unflipAll();
+  targetX=-(t.gx*CELL_W - vw/2 + 220/2);
+  targetY=-(t.gy*CELL_H - vh/2 + 240/2);
+  animTo=true; velX=0; velY=0;
+  setTimeout(()=>{
+    const k=t.gx+','+t.gy;
+    const el=rendered[k];
+    if(el){ el.classList.remove('found'); void el.offsetWidth; el.classList.add('found');
+      setTimeout(()=>el.classList.remove('found'),3200); }
+  },1400);
+  document.getElementById('wallSearch').blur();
+}
+document.getElementById('wallSearch').addEventListener('keydown', e=>{ if(e.key==='Enter') searchTile(); });
+
+window.addEventListener('resize', ()=>{ vw=innerWidth; vh=innerHeight; });
+
+/* ═══════════════ MODAL LOGIC ═══════════════ */
+const modalOverlay=document.getElementById('modalOverlay');
+function openModal(tier){
+  modalOverlay.classList.add('open');
+  document.body.style.overflow='hidden';
+  if(tier){
+    const sel=document.getElementById('fTileType');
+    if(tier==='basic') sel.value='199';
+    else if(tier==='premium') sel.value='499';
+    else if(tier==='featured') sel.value='999';
+    else if(tier==='choose') sel.value='1999';
+    updateTotal();
+  }
+}
+function closeModal(){
+  modalOverlay.classList.remove('open');
+  if(!wallOpen) document.body.style.overflow='';
+}
+
+function selectPrivacy(el){
+  document.querySelectorAll('.privacy-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function selectReminder(el){
+  document.querySelectorAll('.reminder-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  updateTotal();
+}
+
+function updateTotal(){
+  const base = parseInt(document.getElementById('fTileType').value);
+  const remEl = document.querySelector('.reminder-opt.selected');
+  const rem = remEl ? parseInt(remEl.dataset.price) : 0;
+  document.getElementById('totalPrice').textContent = '₹' + (base+rem);
+  const cng = document.getElementById('chooseNumGroup');
+  if(cng) cng.style.display = base === 1999 ? 'block' : 'none';
+  // Reset availability status when switching tiers
+  if(base !== 1999){ document.getElementById('numStatus').style.display='none'; numAvailable=false; }
+}
+
+/* ─── NUMBER AVAILABILITY SYSTEM ─── */
+// Track taken numbers: demo tiles + purchased numbers
+const takenNumbers = new Set();
+tiles.forEach(t => takenNumbers.add(t.block));
+// Load purchased numbers from localStorage
+const purchased = JSON.parse(localStorage.getItem('awy_purchased') || '[]');
+purchased.forEach(p => takenNumbers.add(p.block));
+
+let numAvailable = false;
+let checkTimeout = null;
+
+function checkNumAvail(){
+  const input = document.getElementById('fDesiredNum');
+  const status = document.getElementById('numStatus');
+  const hint = document.getElementById('numHint');
+  const val = input.value.trim();
+  numAvailable = false;
+
+  if(!val || isNaN(val)){
+    status.style.display = 'none';
+    hint.textContent = 'Enter any number from 1 to 1,000,000. Availability checks instantly.';
+    hint.style.color = 'var(--text-light)';
+    input.style.borderColor = 'var(--border)';
+    return;
+  }
+
+  const num = parseInt(val);
+  if(num < 1 || num > 1000000){
+    status.textContent = '✕ Out of range';
+    status.style.color = 'var(--red)';
+    status.style.display = 'block';
+    hint.textContent = 'Must be between 1 and 1,000,000.';
+    hint.style.color = '#C94444';
+    input.style.borderColor = '#C94444';
+    return;
+  }
+
+  // Simulate a brief check delay for UX
+  status.textContent = '...';
+  status.style.color = 'var(--text-light)';
+  status.style.display = 'block';
+
+  clearTimeout(checkTimeout);
+  checkTimeout = setTimeout(() => {
+    if(takenNumbers.has(num)){
+      status.textContent = '✕ Taken';
+      status.style.color = '#C94444';
+      hint.textContent = 'This number is already taken. Try another — your birthday, anniversary, or a lucky number!';
+      hint.style.color = '#C94444';
+      input.style.borderColor = '#C94444';
+      numAvailable = false;
+    } else {
+      status.textContent = '✓ Available';
+      status.style.color = '#2D8A4E';
+      hint.textContent = 'This number is yours! Complete the form and proceed to payment.';
+      hint.style.color = '#2D8A4E';
+      input.style.borderColor = '#2D8A4E';
+      numAvailable = true;
+    }
+  }, 300);
+}
+
+/* ─── PURCHASE LOGGING ─── */
+function logPurchase(tier, amount, desiredNum){
+  const purchase = {
+    time: new Date().toISOString(),
+    id: 'PUR-' + Date.now(),
+    tier: tier,
+    amount: amount,
+    block: desiredNum || 'auto-assign',
+    from: document.getElementById('fFromName').value.trim(),
+    to: document.getElementById('fToName').value.trim(),
+    message: document.getElementById('fMessage').value.trim(),
+    date: document.getElementById('fDate').value,
+    occasion: document.getElementById('fOccasion').value,
+    yourEmail: document.getElementById('fYourEmail').value.trim(),
+    theirEmail: document.getElementById('fTheirEmail').value.trim(),
+    yourWA: document.getElementById('fYourWA').value.trim(),
+    theirWA: document.getElementById('fTheirWA').value.trim(),
+    instagram: document.getElementById('fInsta').value.trim(),
+    privacy: document.querySelector('.privacy-opt.selected')?.dataset.val || 'public',
+    reminder: document.querySelector('.reminder-opt.selected')?.querySelector('.reminder-name')?.textContent || 'Annual',
+  };
+  const purchases = JSON.parse(localStorage.getItem('awy_purchases') || '[]');
+  purchases.unshift(purchase);
+  localStorage.setItem('awy_purchases', JSON.stringify(purchases));
+  if(desiredNum){
+    takenNumbers.add(desiredNum);
+    const pn = JSON.parse(localStorage.getItem('awy_purchased') || '[]');
+    pn.push({ block: desiredNum, time: new Date().toISOString(), tier });
+    localStorage.setItem('awy_purchased', JSON.stringify(pn));
+  }
+}
+
+function handlePhoto(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    document.getElementById('photoPreview').src=e.target.result;
+    document.getElementById('photoArea').classList.add('has-photo');
+  };
+  reader.readAsDataURL(file);
+}
+function removePhoto(e){
+  e.stopPropagation();
+  document.getElementById('photoArea').classList.remove('has-photo');
+  document.getElementById('photoInput').value='';
+}
+
+function placeTile(){
+  const tier = document.getElementById('fTileType').value;
+  const tierNames = {'199':'Basic','499':'Premium','999':'Featured','1999':'Choose Your Number'};
+  const links = {
+    '199': 'https://rzp.io/rzp/AztXreM4',
+    '499': 'https://rzp.io/rzp/N3TJtJGH',
+    '999': 'https://rzp.io/rzp/SNz8dEnm',
+    '1999': 'https://rzp.io/rzp/320fvww'
+  };
+
+  if(tier === '1999'){
+    const desiredNum = parseInt(document.getElementById('fDesiredNum').value);
+    if(!desiredNum || isNaN(desiredNum)){
+      showToast('Please enter your desired tile number');
+      document.getElementById('fDesiredNum').focus();
+      return;
+    }
+    if(desiredNum < 1 || desiredNum > 1000000){
+      showToast('Number must be between 1 and 1,000,000');
+      return;
+    }
+    if(!numAvailable){
+      showToast('This number is not available — please choose another');
+      document.getElementById('fDesiredNum').focus();
+      return;
+    }
+    logPurchase('Choose Your Number', 1999, desiredNum);
+    window.open(links['1999'], '_blank');
+    showToast('Tile #' + desiredNum + ' reserved for you — completing payment...');
+    return;
+  }
+
+  logPurchase(tierNames[tier] || 'Unknown', parseInt(tier), null);
+  const url = links[tier];
+  if(url){
+    window.open(url, '_blank');
+    showToast('Redirecting to payment...');
+  }
+}
+
+/* ─── TOAST ─── */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+/* ─── SMOOTH SCROLL ─── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+</script>
+</body>
+</html>
